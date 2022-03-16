@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/Fonts/menu-select.spritefont</SourceFile>
-  <SourceTime>2022-03-16T14:12:09.9192389-06:00</SourceTime>
-  <DestFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/bin/DesktopGL/Content/Fonts/menu-select.xnb</DestFile>
-  <DestTime>2022-03-16T14:12:12.9762373-06:00</DestTime>
+  <SourceFile>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu-select.spritefont</SourceFile>
+  <SourceTime>2022-03-16T17:36:20.5700637-06:00</SourceTime>
+  <DestFile>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/bin/DesktopGL/Content/Fonts/menu-select.xnb</DestFile>
+  <DestTime>2022-03-16T17:37:09.9198185-06:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
-  <ImporterTime>2020-08-10T10:17:54-06:00</ImporterTime>
+  <ImporterTime>2020-08-10T16:17:54-06:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
-  <ProcessorTime>2020-08-10T10:17:54-06:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T16:17:54-06:00</ProcessorTime>
   <Parameters>
     <Key>PremultiplyAlpha</Key>
     <Value>True</Value>

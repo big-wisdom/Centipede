@@ -96,12 +96,15 @@ namespace CS5410
         {
             m_spriteBatch.Begin();
 
+            // calculate a quarter of the screen
+            int height =  m_graphics.GraphicsDevice.Viewport.Bounds.Height;
             // I split the first one's parameters on separate lines to help you see them better
             float bottom = drawMenuItem(
                 m_currentSelection == MenuState.NewGame ? m_fontMenuSelect : m_fontMenu, 
                 "New Game",
-                200, 
-                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.Blue);
+                height / 4, 
+                m_currentSelection == MenuState.NewGame ? Color.Yellow : Color.Blue
+            );
             bottom = drawMenuItem(m_currentSelection == MenuState.HighScores ? m_fontMenuSelect : m_fontMenu, "High Scores", bottom, m_currentSelection == MenuState.HighScores ? Color.Yellow : Color.Blue);
             bottom = drawMenuItem(m_currentSelection == MenuState.Help ? m_fontMenuSelect : m_fontMenu, "Help", bottom, m_currentSelection == MenuState.Help ? Color.Yellow : Color.Blue);
             bottom = drawMenuItem(m_currentSelection == MenuState.About ? m_fontMenuSelect : m_fontMenu, "About", bottom, m_currentSelection == MenuState.About ? Color.Yellow : Color.Blue);

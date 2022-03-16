@@ -23,8 +23,8 @@ namespace CS5410
 
         protected override void Initialize()
         {
-            m_graphics.PreferredBackBufferWidth = 1920;
-            m_graphics.PreferredBackBufferHeight = 1080;
+            m_graphics.PreferredBackBufferWidth = 1280;
+            m_graphics.PreferredBackBufferHeight = 800;
             m_graphics.ApplyChanges();
 
             m_states = new Dictionary<GameStateEnum, IGameState>();
