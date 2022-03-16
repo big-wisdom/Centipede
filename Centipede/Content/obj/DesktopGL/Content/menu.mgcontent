@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/menu.spritefont</SourceFile>
+  <SourceTime>2020-08-10T10:17:28-06:00</SourceTime>
+  <DestFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/bin/DesktopGL/Content/menu.xnb</DestFile>
+  <DestTime>2022-03-15T21:47:48.4713314-06:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2020-08-10T10:17:54-06:00</ImporterTime>
+  <Processor>LocalizedFontProcessor</Processor>
+  <ProcessorTime>2020-08-10T10:17:54-06:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
