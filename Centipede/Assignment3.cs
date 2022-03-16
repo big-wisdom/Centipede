@@ -23,7 +23,10 @@ namespace CS5410
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            m_graphics.PreferredBackBufferWidth = 1920;
+            m_graphics.PreferredBackBufferHeight = 1080;
+            m_graphics.ApplyChanges();
+
             m_states = new Dictionary<GameStateEnum, IGameState>();
             m_states.Add(GameStateEnum.MainMenu, new MainMenuView());
 

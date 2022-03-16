@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace CS5410
 {
@@ -19,7 +20,17 @@ namespace CS5410
             Quit
         }
 
-        private MenuState m_currentSelection = MenuState.NewGame;
+        private MenuState m_currentSelection {
+            get
+            {
+                Console.WriteLine((MenuState)(currentSelectionIndex % enumLength));
+                return (MenuState)(currentSelectionIndex % enumLength);
+            }
+        }
+
+        private int currentSelectionIndex = 0;
+        private int enumLength = Enum.GetNames(typeof(MenuState)).Length;
+
         private bool m_waitForKeyRelease = false;
 
         public override void loadContent(ContentManager contentManager)
@@ -35,36 +46,41 @@ namespace CS5410
                 // Arrow keys to navigate the menu
                 if (Keyboard.GetState().IsKeyDown(Keys.Down))
                 {
-                    m_currentSelection = m_currentSelection + 1;
+                    currentSelectionIndex += 1;
                     m_waitForKeyRelease = true;
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
-                    m_currentSelection = m_currentSelection - 1;
+                    currentSelectionIndex -= 1;
+                    if (currentSelectionIndex == -1) currentSelectionIndex = enumLength - 1;
                     m_waitForKeyRelease = true;
                 }
                 
                 // If enter is pressed, return the appropriate new state
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.NewGame)
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    return GameStateEnum.GamePlay;
+                    if (m_currentSelection == MenuState.NewGame)
+                    {
+                        return GameStateEnum.GamePlay;
+                    }
+                    else if (m_currentSelection == MenuState.HighScores)
+                    {
+                        return GameStateEnum.HighScores;
+                    }
+                    else if (m_currentSelection == MenuState.Help)
+                    {
+                        return GameStateEnum.Help;
+                    }
+                    else if (m_currentSelection == MenuState.About)
+                    {
+                        return GameStateEnum.About;
+                    }
+                    else if (m_currentSelection == MenuState.Quit)
+                    {
+                        return GameStateEnum.Exit;
+                    }
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.HighScores)
-                {
-                    return GameStateEnum.HighScores;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Help)
-                {
-                    return GameStateEnum.Help;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.About)
-                {
-                    return GameStateEnum.About;
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) && m_currentSelection == MenuState.Quit)
-                {
-                    return GameStateEnum.Exit;
-                }
+                
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
             {

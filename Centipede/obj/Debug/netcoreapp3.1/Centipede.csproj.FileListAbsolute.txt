@@ -22,6 +22,6 @@ C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\obj\Debug\netcoreapp
 C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\obj\Debug\netcoreapp3.1\Centipede.dll
 C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\obj\Debug\netcoreapp3.1\Centipede.pdb
 C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\obj\Debug\netcoreapp3.1\Centipede.genruntimeconfig.cache
-C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\bin\Debug\netcoreapp3.1\Content\Fonts\menu-select.xnb
 C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\bin\Debug\netcoreapp3.1\Content\Fonts\menu.xnb
 C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\bin\Debug\netcoreapp3.1\Content\menu.xnb
+C:\Users\Eli_h\school\gameDev\Centipede\Centipede\Centipede\bin\Debug\netcoreapp3.1\Content\Fonts\menu-select.xnb
