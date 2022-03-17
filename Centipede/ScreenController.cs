@@ -24,7 +24,7 @@ namespace Centipede
             m_states = new Dictionary<GameStateEnum, IGameState>();
             m_states.Add(GameStateEnum.MainMenu, new MainMenuView());
             m_states.Add(GameStateEnum.GamePlay, gameView);
-            m_states.Add(GameStateEnum.Settings, new SettingsView(gameView.controls));
+            m_states.Add(GameStateEnum.Settings, new SettingsView(gameView));
 
             // We are starting with the main menu
             viewStack.Push(GameStateEnum.MainMenu);
