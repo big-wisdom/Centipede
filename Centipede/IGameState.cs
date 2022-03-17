@@ -8,7 +8,7 @@ namespace CS5410
     {
         void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics);
         void loadContent(ContentManager contentManager);
-        GameStateEnum processInput(GameTime gameTime);
+        void processInput(GameTime gameTime);
         void update(GameTime gameTime);
         void render(GameTime gameTime);
     }

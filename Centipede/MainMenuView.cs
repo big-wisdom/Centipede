@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace CS5410
 {
@@ -10,6 +11,11 @@ namespace CS5410
     {
         private SpriteFont m_fontMenu;
         private SpriteFont m_fontMenuSelect;
+        private Stack<GameStateEnum> gameStateStack;
+
+        public MainMenuView(Stack<GameStateEnum> gameStateStack) {
+            this.gameStateStack = gameStateStack;
+        }
 
         private enum MenuState
         {
@@ -38,7 +44,8 @@ namespace CS5410
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
             m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
         }
-        public override GameStateEnum processInput(GameTime gameTime)
+
+        public override void processInput(GameTime gameTime)
         {
             // This is the technique I'm using to ensure one keypress makes one menu navigation move
             if (!m_waitForKeyRelease)
@@ -61,23 +68,23 @@ namespace CS5410
                 {
                     if (m_currentSelection == MenuState.NewGame)
                     {
-                        return GameStateEnum.GamePlay;
+                        gameStateStack.Push(GameStateEnum.GamePlay);
                     }
                     else if (m_currentSelection == MenuState.HighScores)
                     {
-                        return GameStateEnum.HighScores;
+                        gameStateStack.Push(GameStateEnum.HighScores);
                     }
                     else if (m_currentSelection == MenuState.Help)
                     {
-                        return GameStateEnum.Help;
+                        gameStateStack.Push(GameStateEnum.Help);
                     }
                     else if (m_currentSelection == MenuState.About)
                     {
-                        return GameStateEnum.About;
+                        gameStateStack.Push(GameStateEnum.About);
                     }
                     else if (m_currentSelection == MenuState.Quit)
                     {
-                        return GameStateEnum.Exit;
+                        gameStateStack.Push(GameStateEnum.Exit);
                     }
                 }
                 
@@ -86,12 +93,14 @@ namespace CS5410
             {
                 m_waitForKeyRelease = false;
             }
-
-            return GameStateEnum.MainMenu;
         }
+
+
         public override void update(GameTime gameTime)
         {
         }
+
+
         public override void render(GameTime gameTime)
         {
             m_spriteBatch.Begin();

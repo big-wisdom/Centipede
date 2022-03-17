@@ -15,7 +15,7 @@ namespace CS5410
             m_spriteBatch = new SpriteBatch(graphicsDevice);
         }
         public abstract void loadContent(ContentManager contentManager);
-        public abstract GameStateEnum processInput(GameTime gameTime);
+        public abstract void processInput(GameTime gameTime);
         public abstract void render(GameTime gameTime);
         public abstract void update(GameTime gameTime);
     }

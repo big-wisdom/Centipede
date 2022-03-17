@@ -4,10 +4,12 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu.spritefont</File>
     <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu-select.spritefont</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu.spritefont</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheet.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>

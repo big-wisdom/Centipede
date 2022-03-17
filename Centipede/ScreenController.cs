@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CS5410;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,6 @@ using Microsoft.Xna.Framework.Content;
 
 namespace Centipede
 {
-
     public class ScreenController
     {
         public IGameState m_currentState {
@@ -23,7 +21,8 @@ namespace Centipede
         public ScreenController()
         {
             m_states = new Dictionary<GameStateEnum, IGameState>();
-            m_states.Add(GameStateEnum.MainMenu, new MainMenuView());
+            m_states.Add(GameStateEnum.MainMenu, new MainMenuView(viewStack));
+            m_states.Add(GameStateEnum.GamePlay, new GameView(viewStack));
 
             // We are starting with the main menu
             viewStack.Push(GameStateEnum.MainMenu);
