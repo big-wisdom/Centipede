@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Centipede;
 
 namespace CS5410
 {
@@ -10,13 +11,12 @@ namespace CS5410
         private GraphicsDeviceManager m_graphics;
         private SpriteBatch m_spriteBatch;
 
-        private IGameState m_currentState;
-        private GameStateEnum m_nextStateEnum = GameStateEnum.MainMenu;
-        private Dictionary<GameStateEnum, IGameState> m_states;
+        private ScreenController screenController;
 
         public Assignment3()
         {
             m_graphics = new GraphicsDeviceManager(this);
+            screenController = new ScreenController();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -27,12 +27,6 @@ namespace CS5410
             m_graphics.PreferredBackBufferHeight = 800;
             m_graphics.ApplyChanges();
 
-            m_states = new Dictionary<GameStateEnum, IGameState>();
-            m_states.Add(GameStateEnum.MainMenu, new MainMenuView());
-
-            // We are starting with the main menu
-            m_currentState = m_states[GameStateEnum.MainMenu];
-
             base.Initialize();
         }
 
@@ -40,23 +34,20 @@ namespace CS5410
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            foreach (var item in m_states)
-            {
-                item.Value.initialize(this.GraphicsDevice, m_graphics);
-                item.Value.loadContent(this.Content);
-            }
+            screenController.initializeStates(this.GraphicsDevice, m_graphics, this.Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            m_nextStateEnum = m_currentState.processInput(gameTime);
+            screenController.m_currentState.processInput(gameTime);
+
             // Special case for exiting the game
-            if (m_nextStateEnum == GameStateEnum.Exit)
+            if (screenController.m_nextStateEnum == GameStateEnum.Exit)
             {
                 Exit();
             }
 
-            m_currentState.update(gameTime);
+            screenController.m_currentState.update(gameTime);
 
             base.Update(gameTime);
         }
@@ -65,9 +56,7 @@ namespace CS5410
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            m_currentState.render(gameTime);
-
-            m_currentState = m_states[m_nextStateEnum];
+            screenController.m_currentState.render(gameTime);
 
             base.Draw(gameTime);
         }
