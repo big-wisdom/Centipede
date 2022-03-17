@@ -16,7 +16,7 @@ namespace Centipede
         // Rendering info configuration to be passed into centipede object, but the textures loaded here
         // I realized that some rendering info is necessary inside the gameModel, like radius is tied to the texture
         // that I use. So content will be loaded here and passed into the model, then the model will be rendered here.
-        // this dictionary acts like a config
+        // this enum dictionary act like a config
         public enum CharachterEnum
         {
             Ship,
@@ -25,14 +25,7 @@ namespace Centipede
             Spider,
             laser
         }
-        //Dictionary<CharachterEnum, Dictionary<String, dynamic>> charachters = new Dictionary<CharachterEnum, Dictionary<string, dynamic>>
-        //{
-        //    [CharachterEnum.Ship] = {
-        //        ["radius"] = 20,
-        //        ["texturePath"] = "spriteSheets/ship",
-        //        ["renderOffset"] = new Vector2(-14, -16)
-        //    },
-        //};
+
         Dictionary<CharachterEnum, Dictionary<String, dynamic>> charachters = new Dictionary<CharachterEnum, Dictionary<string, dynamic>>
         {
             { CharachterEnum.Ship,
@@ -45,6 +38,17 @@ namespace Centipede
             }
         };
 
+        
+        // This enum and dictionary are config for the controls
+        public enum ControlsEnum
+        {
+            up,
+            right,
+            down,
+            left
+        }
+
+        public Dictionary<Keys, ControlsEnum> controls { get; set; }
 
         SpriteFont m_fontMenu;
         Texture2D ship;
@@ -52,6 +56,14 @@ namespace Centipede
         public GameView(Stack<GameStateEnum> gameStateStack)
         {
             this.gameStateStack = gameStateStack;
+
+            controls = new Dictionary<Keys, ControlsEnum>
+            {
+                {Keys.Up, ControlsEnum.up},
+                {Keys.Right, ControlsEnum.right},
+                {Keys.Down, ControlsEnum.down},
+                {Keys.Left, ControlsEnum.left}
+            };
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -72,25 +84,29 @@ namespace Centipede
             double x = 0;
             bool move = false;
             foreach(Keys k in keysPressed) {
-                if (k == Keys.Left)
+                if (controls.ContainsKey(k))
                 {
-                    x -= 1;
-                    move = true;
-                }
-                if (k == Keys.Right)
-                {
-                    x += 1;
-                    move = true;
-                }
-                if (k == Keys.Up)
-                {
-                    y -= 1;
-                    move = true;
-                }
-                if (k == Keys.Down)
-                {
-                    y += 1;
-                    move = true;
+                    ControlsEnum control = controls[k];
+                    if (control == ControlsEnum.left)
+                    {
+                        x -= 1;
+                        move = true;
+                    }
+                    if (control == ControlsEnum.right)
+                    {
+                        x += 1;
+                        move = true;
+                    }
+                    if (control == ControlsEnum.up)
+                    {
+                        y -= 1;
+                        move = true;
+                    }
+                    if (control == ControlsEnum.down)
+                    {
+                        y += 1;
+                        move = true;
+                    }
                 }
             }
             double angle = Math.Atan2(y, x);
