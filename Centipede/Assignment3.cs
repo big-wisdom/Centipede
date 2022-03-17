@@ -54,7 +54,7 @@ namespace CS5410
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             screenController.m_currentState.render(gameTime);
 
