@@ -5,7 +5,7 @@
         MainMenu,
         GamePlay,
         HighScores,
-        Help,
+        Settings,
         About,
         Exit
     }

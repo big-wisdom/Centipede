@@ -11,7 +11,6 @@ namespace Centipede
     public class GameView : GameStateView
     {
         Centipede game;
-        Stack<GameStateEnum> gameStateStack;
 
         // Rendering info configuration to be passed into centipede object, but the textures loaded here
         // I realized that some rendering info is necessary inside the gameModel, like radius is tied to the texture
@@ -53,10 +52,8 @@ namespace Centipede
         SpriteFont m_fontMenu;
         Texture2D ship;
 
-        public GameView(Stack<GameStateEnum> gameStateStack)
+        public GameView()
         {
-            this.gameStateStack = gameStateStack;
-
             controls = new Dictionary<Keys, ControlsEnum>
             {
                 {Keys.Up, ControlsEnum.up},

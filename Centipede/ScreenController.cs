@@ -20,9 +20,11 @@ namespace Centipede
 
         public ScreenController()
         {
+            GameView gameView = new GameView();
             m_states = new Dictionary<GameStateEnum, IGameState>();
-            m_states.Add(GameStateEnum.MainMenu, new MainMenuView(viewStack));
-            m_states.Add(GameStateEnum.GamePlay, new GameView(viewStack));
+            m_states.Add(GameStateEnum.MainMenu, new MainMenuView());
+            m_states.Add(GameStateEnum.GamePlay, gameView);
+            m_states.Add(GameStateEnum.Settings, new SettingsView(gameView.controls));
 
             // We are starting with the main menu
             viewStack.Push(GameStateEnum.MainMenu);
@@ -31,7 +33,7 @@ namespace Centipede
         public void initializeStates(GraphicsDevice graphicsDevice, GraphicsDeviceManager gdm, ContentManager content) { 
             foreach (var item in m_states)
             {
-                item.Value.initialize(graphicsDevice, gdm);
+                item.Value.initialize(graphicsDevice, gdm, viewStack);
                 item.Value.loadContent(content);
             }
         }
