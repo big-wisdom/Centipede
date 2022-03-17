@@ -18,7 +18,22 @@ namespace Centipede
 
             // initialize ship
             Vector2 shipPosition = new Vector2(m_graphics.GraphicsDevice.Viewport.Bounds.Width / 2, 3 * (m_graphics.GraphicsDevice.Viewport.Bounds.Height / 4));
-            ship = new Ship(shipPosition, charachters[GameView.CharachterEnum.Ship]["radius"], GameView.CharachterEnum.Ship);
+            ship = new Ship(shipPosition, charachters[GameView.CharachterEnum.Ship]["radius"], charachters[GameView.CharachterEnum.Ship]["maxSpeed"], GameView.CharachterEnum.Ship);
+        }
+
+        public void moveShip(double angle)
+        {
+            ship.move(angle);
+        }
+
+        public void stopShip()
+        {
+            ship.stop();
+        }
+
+        public void update(GameTime gametime)
+        {
+            ship.update(gametime);
         }
     }
 }

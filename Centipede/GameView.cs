@@ -4,6 +4,7 @@ using CS5410;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Centipede
 {
@@ -37,6 +38,7 @@ namespace Centipede
             { CharachterEnum.Ship,
                 new Dictionary<string, dynamic>{
                     {"radius" , 20 },
+                    {"maxSpeed", 300}, // per second
                     { "texturePath", "spriteSheets/ship" },
                     { "renderOffset", new Vector2(-14, -16) },
                 }
@@ -64,6 +66,44 @@ namespace Centipede
 
         public override void processInput(GameTime gameTime)
         {
+            KeyboardState keyboard = Keyboard.GetState();
+            Keys[] keysPressed = keyboard.GetPressedKeys();
+            double y = 0;
+            double x = 0;
+            bool move = false;
+            foreach(Keys k in keysPressed) {
+                if (k == Keys.Left)
+                {
+                    x -= 1;
+                    move = true;
+                }
+                if (k == Keys.Right)
+                {
+                    x += 1;
+                    move = true;
+                }
+                if (k == Keys.Up)
+                {
+                    y -= 1;
+                    move = true;
+                }
+                if (k == Keys.Down)
+                {
+                    y += 1;
+                    move = true;
+                }
+            }
+            double angle = Math.Atan2(y, x);
+
+            if (move)
+            {
+                game.moveShip(angle);
+            } else
+            {
+                game.stopShip();
+            }
+
+            game.update(gameTime);
         }
 
         public override void render(GameTime gameTime)

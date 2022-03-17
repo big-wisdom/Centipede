@@ -9,7 +9,7 @@ namespace Centipede
 {
     public class Ship : Entity
     {
-        public Ship(Vector2 position, int radius, CharachterEnum type) : base(position, radius, type)
+        public Ship(Vector2 position, int radius, int maxSpeed, CharachterEnum type) : base(position, radius, maxSpeed, type)
         {
         }
     }
