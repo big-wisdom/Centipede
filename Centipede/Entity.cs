@@ -15,7 +15,7 @@ namespace Centipede
         int radius;
         public CharachterEnum type;
         int maxSpeed;
-        private Vector2 velocity;
+        protected Vector2 velocity;
 
         public Entity(Vector2 position, int radius, int maxSpeed, CharachterEnum type)
         {
@@ -32,15 +32,36 @@ namespace Centipede
             velocity = new Vector2(dx, dy);
         }
 
-        public void update(GameTime gametime)
-        {
-            Vector2 displacement = Vector2.Multiply(velocity, (float)(gametime.ElapsedGameTime.TotalSeconds));
-            position += displacement;
-        }
+        public abstract void update(GameTime gametime, List<Collision> collisions);
 
         public void stop()
         {
             velocity = Vector2.Zero;
+        }
+
+        protected Vector2 getNextPosition(GameTime time) {
+            return position + Vector2.Multiply(velocity, (float)time.ElapsedGameTime.TotalSeconds);
+        }
+
+        public List<Collision> checkBoundaryCollision(Rectangle rec, GameTime time) {
+
+            Vector2 hypotheticalPosition = getNextPosition(time);
+            List<Collision> collisions = new List<Collision>();
+
+            if ((hypotheticalPosition.X - rec.X) < radius) {  // left wall
+                collisions.Add(new Collision(CharachterEnum.leftWall));
+            }
+            if (((rec.X+rec.Width) - hypotheticalPosition.X) < radius) {  // right wall
+                collisions.Add(new Collision(CharachterEnum.rightWall));
+            }
+            if ((hypotheticalPosition.Y - rec.Y) < radius) {  // top wall
+                collisions.Add(new Collision(CharachterEnum.topWall));
+            }
+            if (((rec.Y+rec.Height) - hypotheticalPosition.Y) < radius) {  // bottom wall
+                collisions.Add(new Collision(CharachterEnum.bottomWall));
+            }
+
+            return collisions;
         }
     }
 }

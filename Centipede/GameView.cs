@@ -23,7 +23,11 @@ namespace Centipede
             Centipede,
             Mushroom,
             Spider,
-            laser
+            laser,
+            topWall,
+            rightWall,
+            bottomWall,
+            leftWall
         }
 
         Dictionary<CharachterEnum, Dictionary<String, dynamic>> charachters = new Dictionary<CharachterEnum, Dictionary<string, dynamic>>
