@@ -37,7 +37,6 @@ namespace Centipede
                 }
             }
         };
-
         
         // This enum and dictionary are config for the controls
         public enum ControlsEnum
@@ -68,6 +67,21 @@ namespace Centipede
                 {Keys.Down, ControlsEnum.down},
                 {Keys.Left, ControlsEnum.left}
             };
+        }
+
+
+        // extend the inherited initialize in order to scale entities
+        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard, ScreenScaler scaler) {
+            base.initialize(graphicsDevice, graphics, gameStateStack, keyboard, scaler);
+
+            foreach (CharachterEnum charachter in charachters.Keys) {
+                // scale radius
+                charachters[charachter]["radius"] = (int)(charachters[charachter]["radius"] * scaler.screenScaleRatio);
+                // scale maxSpeed
+                charachters[charachter]["maxSpeed"] = (int)(charachters[charachter]["maxSpeed"] * scaler.screenScaleRatio);
+                // scale renderOffset
+                charachters[charachter]["renderOffset"] = Vector2.Multiply(charachters[charachter]["renderOffset"], scaler.screenScaleRatio);
+            }
         }
 
         private void resetGame() {
@@ -179,8 +193,13 @@ namespace Centipede
         {
             CharachterEnum type = e.type;
             Vector2 offset = charachters[type]["renderOffset"];
+            Vector2 size = Vector2.Multiply(offset, (float)2);
+            Vector2 position = e.position + offset;
             Texture2D texture = charachters[type]["texture"];
-            m_spriteBatch.Draw(texture, game.ship.position + offset, Color.White);
+
+            Rectangle rec = new Rectangle((int)position.X, (int)position.Y, (int)Math.Abs(size.X), (int)Math.Abs(size.Y));
+
+            m_spriteBatch.Draw(texture, rec, Color.White);
         }
 
         private void drawPauseOverlay() {

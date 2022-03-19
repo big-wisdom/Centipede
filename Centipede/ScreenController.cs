@@ -36,10 +36,12 @@ namespace Centipede
             viewStack.Push(GameStateEnum.MainMenu);
         }
 
-        public void initializeStates(GraphicsDevice graphicsDevice, GraphicsDeviceManager gdm, ContentManager content) { 
+        public void initializeStates(GraphicsDevice graphicsDevice, GraphicsDeviceManager gdm, ContentManager content) {
+            ScreenScaler scaler = new ScreenScaler(graphicsDevice);
+
             foreach (var item in m_states)
             {
-                item.Value.initialize(graphicsDevice, gdm, viewStack, keyboard);
+                item.Value.initialize(graphicsDevice, gdm, viewStack, keyboard, scaler);
                 item.Value.loadContent(content);
             }
         }

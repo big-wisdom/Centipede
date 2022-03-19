@@ -12,13 +12,15 @@ namespace CS5410
         protected SpriteBatch m_spriteBatch;
         protected Stack<GameStateEnum> gameStateStack;
         protected KeyboardModel keyboard;
+        protected ScreenScaler scaler;
 
-        public void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard)
+        public virtual void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard, ScreenScaler scaler)
         {
             m_graphics = graphics;
             m_spriteBatch = new SpriteBatch(graphicsDevice);
             this.gameStateStack = gameStateStack;
             this.keyboard = keyboard;
+            this.scaler = scaler;
         }
         public abstract void loadContent(ContentManager contentManager);
         public abstract void processInput(GameTime gameTime);

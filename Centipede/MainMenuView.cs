@@ -32,8 +32,6 @@ namespace CS5410
         private int currentSelectionIndex = 0;
         private int enumLength = Enum.GetNames(typeof(MenuState)).Length;
 
-        private bool m_waitForKeyRelease = false;
-
         public override void loadContent(ContentManager contentManager)
         {
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");

@@ -8,7 +8,7 @@ namespace CS5410
 {
     public interface IGameState
     {
-        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard);
+        void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard, ScreenScaler scaler);
         void loadContent(ContentManager contentManager);
         void processInput(GameTime gameTime);
         void update(GameTime gameTime);
