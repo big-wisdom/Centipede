@@ -4,12 +4,12 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/Fonts/menu.spritefont</File>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/Fonts/menu-select.spritefont</File>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/spriteSheet.png</File>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/spriteSheets/explosion11.png</File>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/spriteSheets/ship.png</File>
-    <File>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/spriteSheets/spider.png</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu.spritefont</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/Fonts/menu-select.spritefont</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheet.png</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheets/explosion11.png</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheets/ship.png</File>
+    <File>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheets/spider.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

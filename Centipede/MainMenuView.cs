@@ -25,7 +25,6 @@ namespace CS5410
         private MenuState m_currentSelection {
             get
             {
-                Console.WriteLine((MenuState)(currentSelectionIndex % enumLength));
                 return (MenuState)(currentSelectionIndex % enumLength);
             }
         }
@@ -43,25 +42,23 @@ namespace CS5410
 
         public override void processInput(GameTime gameTime)
         {
-            // This is the technique I'm using to ensure one keypress makes one menu navigation move
-            if (!m_waitForKeyRelease)
-            {
-                // Arrow keys to navigate the menu
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            foreach (Keys k in keyboard.GetUnlockedKeys()) { 
+                if (k == Keys.Down)
                 {
                     currentSelectionIndex += 1;
-                    m_waitForKeyRelease = true;
+                    keyboard.lockKey(k);
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                if (k == Keys.Up)
                 {
                     currentSelectionIndex -= 1;
+                    keyboard.lockKey(k);
                     if (currentSelectionIndex == -1) currentSelectionIndex = enumLength - 1;
-                    m_waitForKeyRelease = true;
                 }
                 
                 // If enter is pressed, return the appropriate new state
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                if (k == Keys.Enter)
                 {
+                    keyboard.lockKey(k);
                     if (m_currentSelection == MenuState.NewGame)
                     {
                         gameStateStack.Push(GameStateEnum.GamePlay);
@@ -83,11 +80,6 @@ namespace CS5410
                         gameStateStack.Push(GameStateEnum.Exit);
                     }
                 }
-                
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Keyboard.GetState().IsKeyUp(Keys.Up))
-            {
-                m_waitForKeyRelease = false;
             }
         }
 

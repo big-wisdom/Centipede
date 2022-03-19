@@ -17,6 +17,7 @@ namespace Centipede
         public GameStateEnum m_nextStateEnum = GameStateEnum.MainMenu;
         public Dictionary<GameStateEnum, IGameState> m_states { get; set; }
         private Stack<GameStateEnum> viewStack = new Stack<GameStateEnum>();
+        public KeyboardModel keyboard = new KeyboardModel();
 
         public ScreenController()
         {
@@ -33,7 +34,7 @@ namespace Centipede
         public void initializeStates(GraphicsDevice graphicsDevice, GraphicsDeviceManager gdm, ContentManager content) { 
             foreach (var item in m_states)
             {
-                item.Value.initialize(graphicsDevice, gdm, viewStack);
+                item.Value.initialize(graphicsDevice, gdm, viewStack, keyboard);
                 item.Value.loadContent(content);
             }
         }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static Centipede.Overlay;
 
 namespace Centipede
 {
@@ -50,7 +51,13 @@ namespace Centipede
         public Dictionary<Keys, ControlsEnum> controls { get; set; }
 
         SpriteFont m_fontMenu;
+        SpriteFont m_fontMenuSelect;
         Texture2D ship;
+        Texture2D overlayTexture;
+
+        // overlay variables
+        Boolean paused = false;
+        Overlay overlay = new Overlay();
 
         public GameView()
         {
@@ -66,43 +73,70 @@ namespace Centipede
         public override void loadContent(ContentManager contentManager)
         {
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
+            m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
 
             ship = contentManager.Load<Texture2D>("spriteSheets/ship");
             charachters[CharachterEnum.Ship]["texture"] = ship;
+
+            overlayTexture = new Texture2D(m_graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            overlayTexture.SetData(new[] { Color.DarkBlue });
 
             game = new Centipede(charachters, m_graphics);
         }
 
         public override void processInput(GameTime gameTime)
         {
-            KeyboardState keyboard = Keyboard.GetState();
-            Keys[] keysPressed = keyboard.GetPressedKeys();
+            List<Keys> unlockedKeys = keyboard.GetUnlockedKeys();
             double y = 0;
             double x = 0;
             bool move = false;
-            foreach(Keys k in keysPressed) {
-                if (controls.ContainsKey(k))
+            foreach(Keys k in unlockedKeys) {
+                if (paused) { 
+                    if (k == Keys.Down) {
+                        overlay.down();
+                        keyboard.lockKey(k);
+                    } else if (k == Keys.Up) {
+                        overlay.up();
+                        keyboard.lockKey(k);
+                    } else if (k == Keys.Enter) { 
+                        if (overlay.selected == OverlayOptions.Continue) {
+                            paused = false;
+                        } else if (overlay.selected == OverlayOptions.Quit) {
+                            gameStateStack.Pop();
+                        }
+                        keyboard.lockKey(k);
+                    }
+
+                }
+                else
                 {
-                    ControlsEnum control = controls[k];
-                    if (control == ControlsEnum.left)
+                    if (controls.ContainsKey(k))
                     {
-                        x -= 1;
-                        move = true;
+                        ControlsEnum control = controls[k];
+                        if (control == ControlsEnum.left)
+                        {
+                            x -= 1;
+                            move = true;
+                        }
+                        if (control == ControlsEnum.right)
+                        {
+                            x += 1;
+                            move = true;
+                        }
+                        if (control == ControlsEnum.up)
+                        {
+                            y -= 1;
+                            move = true;
+                        }
+                        if (control == ControlsEnum.down)
+                        {
+                            y += 1;
+                            move = true;
+                        }
                     }
-                    if (control == ControlsEnum.right)
+                    if (k == Keys.Escape)
                     {
-                        x += 1;
-                        move = true;
-                    }
-                    if (control == ControlsEnum.up)
-                    {
-                        y -= 1;
-                        move = true;
-                    }
-                    if (control == ControlsEnum.down)
-                    {
-                        y += 1;
-                        move = true;
+                        paused = true;
                     }
                 }
             }
@@ -123,14 +157,13 @@ namespace Centipede
         {
             m_spriteBatch.Begin();
 
-            //m_spriteBatch.DrawString(
-            //    m_fontMenu,
-            //    "Hello World",
-            //    new Vector2(m_graphics.PreferredBackBufferWidth / 2, m_graphics.PreferredBackBufferHeight / 2),
-            //    Color.Aqua);
-
             // render ship
             drawEntity(game.ship);
+
+            // draw pause overlay
+            if (paused) {
+                drawPauseOverlay();
+            }
 
             m_spriteBatch.End();
         }
@@ -141,6 +174,35 @@ namespace Centipede
             Vector2 offset = charachters[type]["renderOffset"];
             Texture2D texture = charachters[type]["texture"];
             m_spriteBatch.Draw(texture, game.ship.position + offset, Color.White);
+        }
+
+        private void drawPauseOverlay() {
+            // I want this to be half the width and half the height of the screen in the center
+            Rectangle bounds = m_graphics.GraphicsDevice.Viewport.Bounds;
+            Vector2 position = new Vector2(bounds.Width / 4, bounds.Height / 4);
+            Rectangle rec = new Rectangle(bounds.Width / 4, bounds.Height / 4, bounds.Width / 2, bounds.Height / 2);
+            m_spriteBatch.Draw(overlayTexture, rec, Color.Aqua);
+
+            int continue_y = (bounds.Height * 3)/8;
+            int quit_y = (bounds.Height * 4) / 8;
+            // menu items
+            drawMenuItem(continue_y, OverlayOptions.Continue);
+            drawMenuItem(quit_y, OverlayOptions.Quit);
+        }
+
+        private float drawMenuItem(float y, OverlayOptions selected)
+        {
+            String text = selected.ToString();
+            Color color = overlay.selected == selected ? Color.Orange : Color.Yellow;
+            SpriteFont font = overlay.selected == selected ? m_fontMenu : m_fontMenuSelect;
+            Vector2 stringSize = font.MeasureString(text);
+            m_spriteBatch.DrawString(
+                font,
+                text,
+                new Vector2(m_graphics.PreferredBackBufferWidth / 2 - stringSize.X / 2, y),
+                color);
+
+            return y + stringSize.Y;
         }
 
         public override void update(GameTime gameTime)
