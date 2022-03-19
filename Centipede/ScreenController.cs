@@ -14,7 +14,12 @@ namespace Centipede
             }
         }
 
-        public GameStateEnum m_nextStateEnum = GameStateEnum.MainMenu;
+        public GameStateEnum m_currentStateType { 
+            get {
+                return viewStack.Peek();
+            }
+        }
+
         public Dictionary<GameStateEnum, IGameState> m_states { get; set; }
         private Stack<GameStateEnum> viewStack = new Stack<GameStateEnum>();
         public KeyboardModel keyboard = new KeyboardModel();

@@ -39,15 +39,15 @@ namespace CS5410
 
         protected override void Update(GameTime gameTime)
         {
-            screenController.m_currentState.processInput(gameTime);
-
             // Special case for exiting the game
-            if (screenController.m_nextStateEnum == GameStateEnum.Exit)
+            screenController.m_currentState.processInput(gameTime); // this has potential to update m_currenState
+
+            if (screenController.m_currentStateType == GameStateEnum.Exit)
             {
                 Exit();
+            } else { 
+                screenController.m_currentState.update(gameTime);
             }
-
-            screenController.m_currentState.update(gameTime);
 
             base.Update(gameTime);
         }

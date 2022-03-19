@@ -7,6 +7,7 @@ namespace Centipede
             Continue,
             Quit
         }
+
         int options = Enum.GetNames(typeof(OverlayOptions)).Length;
 
         private int index = 0;

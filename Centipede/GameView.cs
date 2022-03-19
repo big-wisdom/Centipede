@@ -70,6 +70,12 @@ namespace Centipede
             };
         }
 
+        private void resetGame() {
+            paused = false;
+            overlay = new Overlay();
+            game = new Centipede(charachters, m_graphics);
+        }
+
         public override void loadContent(ContentManager contentManager)
         {
             m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
@@ -102,6 +108,7 @@ namespace Centipede
                         if (overlay.selected == OverlayOptions.Continue) {
                             paused = false;
                         } else if (overlay.selected == OverlayOptions.Quit) {
+                            resetGame();
                             gameStateStack.Pop();
                         }
                         keyboard.lockKey(k);
@@ -193,8 +200,8 @@ namespace Centipede
         private float drawMenuItem(float y, OverlayOptions selected)
         {
             String text = selected.ToString();
-            Color color = overlay.selected == selected ? Color.Orange : Color.Yellow;
-            SpriteFont font = overlay.selected == selected ? m_fontMenu : m_fontMenuSelect;
+            Color color = overlay.selected == selected ? Color.Yellow : Color.Orange;
+            SpriteFont font = overlay.selected == selected ? m_fontMenuSelect : m_fontMenu;
             Vector2 stringSize = font.MeasureString(text);
             m_spriteBatch.DrawString(
                 font,
