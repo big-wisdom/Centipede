@@ -34,8 +34,8 @@ namespace CS5410
 
         public override void loadContent(ContentManager contentManager)
         {
-            m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
-            m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
+            m_fontMenu = contentManager.Load<SpriteFont>(scaler.m_fontMenu);
+            m_fontMenuSelect = contentManager.Load<SpriteFont>(scaler.m_fontMenuSelect);
         }
 
         public override void processInput(GameTime gameTime)

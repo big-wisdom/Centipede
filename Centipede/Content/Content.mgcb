@@ -13,12 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/menu.spritefont
+#begin Fonts/menu-select-small.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/menu.spritefont
+/build:Fonts/menu-select-small.spritefont
 
 #begin Fonts/menu-select.spritefont
 /importer:FontDescriptionImporter
@@ -26,6 +26,20 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/menu-select.spritefont
+
+#begin Fonts/menu-small.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/menu-small.spritefont
+
+#begin Fonts/menu.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/menu.spritefont
 
 #begin spriteSheet.png
 /importer:TextureImporter

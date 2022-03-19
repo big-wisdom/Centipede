@@ -92,8 +92,8 @@ namespace Centipede
 
         public override void loadContent(ContentManager contentManager)
         {
-            m_fontMenu = contentManager.Load<SpriteFont>("Fonts/menu");
-            m_fontMenuSelect = contentManager.Load<SpriteFont>("Fonts/menu-select");
+            m_fontMenu = contentManager.Load<SpriteFont>(scaler.m_fontMenu);
+            m_fontMenuSelect = contentManager.Load<SpriteFont>(scaler.m_fontMenuSelect);
 
             ship = contentManager.Load<Texture2D>("spriteSheets/ship");
             charachters[CharachterEnum.Ship]["texture"] = ship;
