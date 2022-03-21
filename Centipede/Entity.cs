@@ -23,6 +23,7 @@ namespace Centipede
             this.radius = radius;
             this.maxSpeed = maxSpeed;
             this.renderOffset = renderOffset;
+            this.type = type;
         }
 
         public Vector2 renderPosition 
@@ -60,19 +61,31 @@ namespace Centipede
             List<Collision> collisions = new List<Collision>();
 
             if ((hypotheticalPosition.X - rec.X) < radius) {  // left wall
-                collisions.Add(new Collision(CharachterEnum.leftWall, rec.X - (position.X - radius)));
+                collisions.Add(new Collision(CharachterEnum.leftWall, new Vector2(rec.X - (position.X - radius))));
             }
             if (((rec.X+rec.Width) - hypotheticalPosition.X) < radius) {  // right wall
-                collisions.Add(new Collision(CharachterEnum.rightWall, (rec.X+rec.Width)-(position.X+radius)));
+                collisions.Add(new Collision(CharachterEnum.rightWall, new Vector2((rec.X+rec.Width)-(position.X+radius))));
             }
             if ((hypotheticalPosition.Y - rec.Y) < radius) {  // top wall
-                collisions.Add(new Collision(CharachterEnum.topWall, rec.Y - (position.Y-radius)));
+                collisions.Add(new Collision(CharachterEnum.topWall, new Vector2(0, rec.Y - (position.Y-radius))));
             }
             if (((rec.Y+rec.Height) - hypotheticalPosition.Y) < radius) {  // bottom wall
-                collisions.Add(new Collision(CharachterEnum.bottomWall, (rec.Y+rec.Height)-(position.Y+radius)));
+                collisions.Add(new Collision(CharachterEnum.bottomWall, new Vector2(0, (rec.Y+rec.Height)-(position.Y+radius))));
             }
 
             return collisions;
+        }
+
+        public Collision checkForCollision(Entity e, TimeSpan time)
+        {
+            Vector2 futureToCenter = e.getNextPosition(time) - getNextPosition(time);
+            if (futureToCenter.Length() < (radius + e.radius))
+            {
+                Vector2 toCenter = e.position - position;
+                return new Collision(e.type, toCenter);
+            }
+                
+            return null;
         }
     }
 }

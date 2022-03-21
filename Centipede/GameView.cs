@@ -158,6 +158,12 @@ namespace Centipede
                 drawEntity(e);
             }
 
+            // render mushrooms
+            foreach(Mushroom m in game.mushrooms)
+            {
+                drawEntity(m);
+            }
+
             // draw pause overlay
             if (paused) {
                 drawPauseOverlay();

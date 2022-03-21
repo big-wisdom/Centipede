@@ -68,16 +68,16 @@ namespace Centipede
                         row++;
                         move(Math.PI / 2);
                         // snap into grid
-                        position += new Vector2(c.distance, 0);
+                        position += c.displacement;
                         // set hold time
-                        holdTime = TimeSpan.FromSeconds(Math.Abs((float)c.distance / (float)maxSpeed));
+                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.displacement.X / (float)maxSpeed));
                         break;
 
                     case CharachterEnum.bottomWall:
                         previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
                         move(previousAngle);
-                        position += new Vector2(0, c.distance);
-                        holdTime = TimeSpan.FromSeconds(c.distance / (float)maxSpeed);
+                        position += c.displacement;
+                        holdTime = TimeSpan.FromSeconds(c.displacement.Y / (float)maxSpeed);
                         break;
                 }
             }
@@ -92,8 +92,6 @@ namespace Centipede
                holdTime = TimeSpan.Zero;
                position = getNextPosition(adjustedTime);
             }
-            //position = getNextPosition(gameTime.ElapsedGameTime);
-
         }
 
         private void updateFrame(GameTime gameTime)

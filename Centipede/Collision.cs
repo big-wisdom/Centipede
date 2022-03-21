@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using static Centipede.GameView;
 
 namespace Centipede
@@ -6,11 +7,11 @@ namespace Centipede
     public class Collision
     {
         public CharachterEnum entityType;
-        public float distance;
+        public Vector2 displacement;
 
-        public Collision(CharachterEnum entityType, float distance)
+        public Collision(CharachterEnum entityType, Vector2 displacement)
         {
-            this.distance = distance;
+            this.displacement = displacement;
             this.entityType = entityType;
         }
     }
