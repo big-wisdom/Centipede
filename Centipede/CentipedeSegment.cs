@@ -11,6 +11,8 @@ namespace Centipede
         double previousAngle;
         TimeSpan holdTime = TimeSpan.Zero;
         private int frame;
+        private TimeSpan animationMilliseconds = TimeSpan.FromMilliseconds(25);
+        private TimeSpan timeTillAnimate = TimeSpan.FromMilliseconds(25);
 
         int row = 1;
         public Rectangle walls {
@@ -56,7 +58,8 @@ namespace Centipede
 
         public override void update(GameTime gameTime, List<Collision> collisions)
         {
-            frame = (frame + 1) % 8;
+            updateFrame(gameTime);
+
             foreach (Collision c in collisions) {
                 switch (c.entityType) {
                     case CharachterEnum.rightWall:
@@ -91,6 +94,16 @@ namespace Centipede
             }
             //position = getNextPosition(gameTime.ElapsedGameTime);
 
+        }
+
+        private void updateFrame(GameTime gameTime)
+        {
+            timeTillAnimate -= gameTime.ElapsedGameTime;
+            if (timeTillAnimate.TotalMilliseconds < 0)
+            {
+                timeTillAnimate = animationMilliseconds + timeTillAnimate;
+                frame = (frame + 1) % 8;
+            }
         }
     }
 }
