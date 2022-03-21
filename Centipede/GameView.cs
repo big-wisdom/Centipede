@@ -13,10 +13,6 @@ namespace Centipede
     {
         Centipede game;
 
-        // Rendering info configuration to be passed into centipede object, but the textures loaded here
-        // I realized that some rendering info is necessary inside the gameModel, like radius is tied to the texture
-        // that I use. So content will be loaded here and passed into the model, then the model will be rendered here.
-        // this enum dictionary act like a config
         public enum CharachterEnum
         {
             Ship,
@@ -30,18 +26,6 @@ namespace Centipede
             leftWall
         }
 
-        Dictionary<CharachterEnum, Dictionary<String, dynamic>> charachters = new Dictionary<CharachterEnum, Dictionary<string, dynamic>>
-        {
-            { CharachterEnum.Ship,
-                new Dictionary<string, dynamic>{
-                    {"radius" , 20 },
-                    {"maxSpeed", 300}, // per second
-                    { "texturePath", "spriteSheets/ship" },
-                    { "renderOffset", new Vector2(-14, -16) },
-                }
-            }
-        };
-        
         // This enum and dictionary are config for the controls
         public enum ControlsEnum
         {
@@ -55,7 +39,7 @@ namespace Centipede
 
         SpriteFont m_fontMenu;
         SpriteFont m_fontMenuSelect;
-        Texture2D ship;
+        Texture2D spriteSheet;
         Texture2D overlayTexture;
 
         // overlay variables
@@ -73,25 +57,10 @@ namespace Centipede
             };
         }
 
-
-        // extend the inherited initialize in order to scale entities
-        public override void initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphics, Stack<GameStateEnum> gameStateStack, KeyboardModel keyboard, ScreenScaler scaler) {
-            base.initialize(graphicsDevice, graphics, gameStateStack, keyboard, scaler);
-
-            foreach (CharachterEnum charachter in charachters.Keys) {
-                // scale radius
-                charachters[charachter]["radius"] = (int)(charachters[charachter]["radius"] * scaler.screenScaleRatio);
-                // scale maxSpeed
-                charachters[charachter]["maxSpeed"] = (int)(charachters[charachter]["maxSpeed"] * scaler.screenScaleRatio);
-                // scale renderOffset
-                charachters[charachter]["renderOffset"] = Vector2.Multiply(charachters[charachter]["renderOffset"], scaler.screenScaleRatio);
-            }
-        }
-
         private void resetGame() {
             paused = false;
             overlay = new Overlay();
-            game = new Centipede(charachters, m_graphics);
+            game = new Centipede(m_graphics);
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -99,13 +68,12 @@ namespace Centipede
             m_fontMenu = contentManager.Load<SpriteFont>(scaler.m_fontMenu);
             m_fontMenuSelect = contentManager.Load<SpriteFont>(scaler.m_fontMenuSelect);
 
-            ship = contentManager.Load<Texture2D>("spriteSheets/ship");
-            charachters[CharachterEnum.Ship]["texture"] = ship;
+            spriteSheet = contentManager.Load<Texture2D>("spriteSheet");
 
             overlayTexture = new Texture2D(m_graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             overlayTexture.SetData(new[] { Color.DarkBlue });
 
-            game = new Centipede(charachters, m_graphics);
+            game = new Centipede(m_graphics);
         }
 
         public override void processInput(GameTime gameTime)
@@ -185,6 +153,11 @@ namespace Centipede
             // render ship
             drawEntity(game.ship);
 
+            // render cenipede
+            foreach (Entity e in game.centipede.centipede) {
+                drawEntity(e);
+            }
+
             // draw pause overlay
             if (paused) {
                 drawPauseOverlay();
@@ -193,23 +166,22 @@ namespace Centipede
             m_spriteBatch.End();
         }
 
+
+        // This method is written with the assumption that the model is build around my
+        // "normal sized screen". So scaling the screen to it's true size will be left to this method
         private void drawEntity(Entity e)
         {
-            CharachterEnum type = e.type;
-            Vector2 offset = charachters[type]["renderOffset"];
-            Vector2 size = Vector2.Multiply(offset, (float)2);
-            Vector2 position = e.position + offset;
-            Texture2D texture = charachters[type]["texture"];
+            Rectangle source = e.computeSourceRectangle();
+            Vector2 scaledRenderPosition = Vector2.Multiply(e.renderPosition, scaler.screenScaleRatio);
+            Rectangle destination = new Rectangle((int)scaledRenderPosition.X, (int)scaledRenderPosition.Y, (int)(source.Width * scaler.screenScaleRatio), (int)(source.Height * scaler.screenScaleRatio));
 
-            Rectangle rec = new Rectangle((int)position.X, (int)position.Y, (int)Math.Abs(size.X), (int)Math.Abs(size.Y));
-
-            m_spriteBatch.Draw(texture, rec, Color.White);
+            m_spriteBatch.Draw(spriteSheet, destination, source, Color.White);
         }
 
         private void drawPauseOverlay() {
             // I want this to be half the width and half the height of the screen in the center
             Rectangle bounds = m_graphics.GraphicsDevice.Viewport.Bounds;
-            Vector2 position = new Vector2(bounds.Width / 4, bounds.Height / 4);
+            // Vector2 position = new Vector2(bounds.Width / 4, bounds.Height / 4);
             Rectangle rec = new Rectangle(bounds.Width / 4, bounds.Height / 4, bounds.Width / 2, bounds.Height / 2);
             m_spriteBatch.Draw(overlayTexture, rec, Color.Aqua);
 

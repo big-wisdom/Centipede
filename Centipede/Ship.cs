@@ -9,8 +9,13 @@ namespace Centipede
 {
     public class Ship : Entity
     {
-        public Ship(Vector2 position, int radius, int maxSpeed, CharachterEnum type) : base(position, radius, maxSpeed, type)
+        public Ship(Vector2 position) : base(position, new Vector2(-14, -16), 20, 300, CharachterEnum.Ship)
         {
+        }
+
+        public override Rectangle computeSourceRectangle()
+        {
+            return new Rectangle(0, 320, 28, 32);
         }
 
         public override void update(GameTime gametime, List<Collision> collisions)
