@@ -40,7 +40,7 @@ namespace Centipede
                     }
                 }
             }
-            position = getNextPosition(gametime);
+            position = getNextPosition(gametime.ElapsedGameTime);
         }
     }
 }

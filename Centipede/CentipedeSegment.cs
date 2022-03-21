@@ -9,6 +9,7 @@ namespace Centipede
     {
         Rectangle bigWalls;
         double previousAngle;
+        TimeSpan holdTime = TimeSpan.Zero;
 
         int row = 1;
         public Rectangle walls { 
@@ -40,16 +41,31 @@ namespace Centipede
                         move(Math.PI / 2);
                         // snap into grid
                         position += new Vector2(c.distance, 0);
+                        // set hold time
+                        holdTime = TimeSpan.FromSeconds(Math.Abs((float)c.distance / (float)maxSpeed));
                         break;
 
                     case CharachterEnum.bottomWall:
                         previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
                         move(previousAngle);
-                        // position += new Vector2(0, c.distance);
+                        position += new Vector2(0, c.distance);
+                        holdTime = TimeSpan.FromSeconds(c.distance / (float)maxSpeed);
                         break;
                 }
             }
-            position = getNextPosition(gameTime);
+
+            // here I adjust for snapping to the wall that is impacted
+            TimeSpan adjustedTime = gameTime.ElapsedGameTime - holdTime;
+            if (adjustedTime.Seconds < 0)
+            {
+                holdTime = TimeSpan.FromSeconds(Math.Abs(adjustedTime.Seconds)); // if there's left over holdTime, leave it for next cycle
+            } else
+            {
+               holdTime = TimeSpan.Zero;
+               position = getNextPosition(adjustedTime);
+            }
+            //position = getNextPosition(gameTime.ElapsedGameTime);
+
         }
     }
 }
