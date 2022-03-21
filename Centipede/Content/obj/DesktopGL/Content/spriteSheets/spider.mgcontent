@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/spriteSheets/spider.png</SourceFile>
-  <SourceTime>2022-03-18T19:37:29.013553-06:00</SourceTime>
-  <DestFile>/Users/elihermann/School/gameDev/Centipede/Centipede/Content/bin/DesktopGL/Content/spriteSheets/spider.xnb</DestFile>
-  <DestTime>2022-03-21T09:56:52.5076637-06:00</DestTime>
+  <SourceFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/spriteSheets/spider.png</SourceFile>
+  <SourceTime>2022-03-17T09:59:48.5806624-06:00</SourceTime>
+  <DestFile>C:/Users/Eli_h/school/gameDev/Centipede/Centipede/Centipede/Content/bin/DesktopGL/Content/spriteSheets/spider.xnb</DestFile>
+  <DestTime>2022-03-21T14:20:13.559715-06:00</DestTime>
   <Importer>TextureImporter</Importer>
-  <ImporterTime>2020-08-10T16:17:54-06:00</ImporterTime>
+  <ImporterTime>2020-08-10T10:17:54-06:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
-  <ProcessorTime>2020-08-10T16:17:54-06:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T10:17:54-06:00</ProcessorTime>
   <Parameters>
     <Key>ColorKeyColor</Key>
     <Value>255,0,255,255</Value>

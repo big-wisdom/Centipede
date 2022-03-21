@@ -10,6 +10,7 @@ namespace Centipede
         Rectangle bigWalls;
         double previousAngle;
         TimeSpan holdTime = TimeSpan.Zero;
+        private int frame;
 
         int row = 1;
         public Rectangle walls {
@@ -33,15 +34,29 @@ namespace Centipede
             previousAngle = angle;
             move(angle);
             this.bigWalls = walls;
+            frame = startingFrame;
         }
 
         public override Rectangle computeSourceRectangle()
         {
-            return new Rectangle(0, 64, 32, 32);
+            int x = 0;
+            int y = 64;
+            int cell = 32;
+            if (frame % 2 == 0)
+            {
+                x += (frame / 2) * cell;
+            } else
+            {
+                y += cell;
+                x += ((frame - 1) / 2) * cell;
+            }
+
+            return new Rectangle(x, y, 32, 32);
         }
 
         public override void update(GameTime gameTime, List<Collision> collisions)
         {
+            frame = (frame + 1) % 8;
             foreach (Collision c in collisions) {
                 switch (c.entityType) {
                     case CharachterEnum.rightWall:
