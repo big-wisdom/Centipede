@@ -173,9 +173,12 @@ namespace Centipede
         {
             Rectangle source = e.computeSourceRectangle();
             Vector2 scaledRenderPosition = Vector2.Multiply(e.renderPosition, scaler.screenScaleRatio);
-            Rectangle destination = new Rectangle((int)scaledRenderPosition.X, (int)scaledRenderPosition.Y, (int)(source.Width * scaler.screenScaleRatio), (int)(source.Height * scaler.screenScaleRatio));
+            //Rectangle destination = new Rectangle((int)scaledRenderPosition.X, (int)scaledRenderPosition.Y, (int)(source.Width * scaler.screenScaleRatio), (int)(source.Height * scaler.screenScaleRatio));
 
-            m_spriteBatch.Draw(spriteSheet, destination, source, Color.White);
+            //m_spriteBatch.Draw(spriteSheet, destination, source, Color.White);
+            // I think I should make screenScaleRatio a vector
+            SpriteEffects effect = e.flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            m_spriteBatch.Draw(spriteSheet, scaledRenderPosition, source, Color.White, 0, Vector2.Zero, scaler.screenScaleRatio, effect, 0);
         }
 
         private void drawPauseOverlay() {

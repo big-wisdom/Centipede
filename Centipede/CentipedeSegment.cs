@@ -5,19 +5,29 @@ using static Centipede.GameView;
 
 namespace Centipede
 {
-    public class CentipedeSegment: Entity
+    public class CentipedeSegment : Entity
     {
         Rectangle bigWalls;
         double previousAngle;
         TimeSpan holdTime = TimeSpan.Zero;
 
         int row = 1;
-        public Rectangle walls { 
+        public Rectangle walls {
             get {
                 return new Rectangle(0, 0, bigWalls.Width, row * 32);
             }
         }
-        
+
+        public override bool flip => computeFlip();
+
+        private bool computeFlip() {
+            // this assumes that only positive angles will be given
+            double adjusted = angle % (2 * Math.PI); 
+            if (15 * Math.PI / 8 > adjusted && adjusted < 5* Math.PI / 8) return true; // pretty much everything right of up
+            // if (11 * Math.PI / 8 < adjusted && adjusted > 7 * Math.PI / 8) return false; // everything left of up
+            return false;
+        }
+
         public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 300, CharachterEnum.Centipede)
         {
             previousAngle = angle;

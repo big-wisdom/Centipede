@@ -14,6 +14,8 @@ namespace Centipede
         public CharachterEnum type;
         public int maxSpeed;
         protected Vector2 velocity;
+        public abstract bool flip { get; }
+        public double angle;
 
         public Entity(Vector2 position, Vector2 renderOffset, int radius, int maxSpeed, CharachterEnum type)
         {
@@ -34,6 +36,7 @@ namespace Centipede
 
         public void move(double angle)
         {
+            this.angle = angle;
             // set velocity
             float dx = (float)(maxSpeed * Math.Cos(angle));
             float dy = (float)(maxSpeed * Math.Sin(angle));

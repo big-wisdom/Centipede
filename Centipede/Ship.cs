@@ -13,6 +13,8 @@ namespace Centipede
         {
         }
 
+        public override bool flip => false;
+
         public override Rectangle computeSourceRectangle()
         {
             return new Rectangle(0, 320, 28, 32);
