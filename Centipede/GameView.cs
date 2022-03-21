@@ -44,7 +44,7 @@ namespace Centipede
 
         // overlay variables
         Boolean paused = false;
-        Overlay overlay = new Overlay();
+        Overlay overlay;
 
         public GameView()
         {
@@ -60,7 +60,7 @@ namespace Centipede
         private void resetGame() {
             paused = false;
             overlay = new Overlay();
-            game = new Centipede(m_graphics);
+            game = new Centipede();
         }
 
         public override void loadContent(ContentManager contentManager)
@@ -73,7 +73,7 @@ namespace Centipede
             overlayTexture = new Texture2D(m_graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             overlayTexture.SetData(new[] { Color.DarkBlue });
 
-            game = new Centipede(m_graphics);
+            resetGame();
         }
 
         public override void processInput(GameTime gameTime)

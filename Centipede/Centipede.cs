@@ -8,17 +8,17 @@ namespace Centipede
 {
     public class Centipede
     {
-        GraphicsDeviceManager m_graphics;
+        // set a standard screen size and in rendering I will account for bigger or smaller screens
+        private Rectangle bounds = new Rectangle(0, 0, 1280, 800);
 
         public Ship ship { get; set; }
         public CentipedeCharachter centipede { get; set; }
 
-        public Centipede(GraphicsDeviceManager m_graphics)
+        public Centipede()
         {
-            this.m_graphics = m_graphics;
 
             // initialize ship
-            Vector2 shipPosition = new Vector2(m_graphics.GraphicsDevice.Viewport.Bounds.Width / 2, 7 * (m_graphics.GraphicsDevice.Viewport.Bounds.Height / 8));
+            Vector2 shipPosition = new Vector2(bounds.Width / 2, 7 * (bounds.Height / 8));
             ship = new Ship(shipPosition);
 
             // initialize centipede
@@ -27,7 +27,7 @@ namespace Centipede
             int index = rnd.Next(11, 29);
             Vector2 centipedePosition = new Vector2(index*cellSize, 0);
             Vector2 offSet = new Vector2(-cellSize/2, -cellSize/2);
-            centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, m_graphics.GraphicsDevice.Viewport.Bounds);
+            centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, bounds);
         }
 
         public void moveShip(double angle)
@@ -59,7 +59,7 @@ namespace Centipede
             Dictionary<Entity, List<Collision>> result = new Dictionary<Entity, List<Collision>>();
             // get pairs of colliding objects
             // check ship against walls
-            Rectangle walls = m_graphics.GraphicsDevice.Viewport.Bounds;
+            Rectangle walls = bounds;
             Rectangle shipBoundary = new Rectangle(0, (walls.Height*3)/4, walls.Width, walls.Height/4);
             result.Add(ship, ship.checkBoundaryCollision(shipBoundary, time));
 
