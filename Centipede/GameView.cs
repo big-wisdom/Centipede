@@ -45,6 +45,7 @@ namespace Centipede
         // overlay variables
         Boolean paused = false;
         Overlay overlay;
+        GameOverOverlay gameOverOverlay;
 
         public GameView()
         {
@@ -60,6 +61,7 @@ namespace Centipede
         private void resetGame() {
             paused = false;
             overlay = new Overlay();
+            gameOverOverlay = new GameOverOverlay();
             game = new Centipede();
         }
 
@@ -78,28 +80,43 @@ namespace Centipede
 
         public override void processInput(GameTime gameTime)
         {
+            if (game.gameOver) paused = true;
+
             List<Keys> unlockedKeys = keyboard.GetUnlockedKeys();
             double y = 0;
             double x = 0;
             bool move = false;
             foreach(Keys k in unlockedKeys) {
                 if (paused) { 
-                    if (k == Keys.Down) {
-                        overlay.down();
-                        keyboard.lockKey(k);
-                    } else if (k == Keys.Up) {
-                        overlay.up();
-                        keyboard.lockKey(k);
-                    } else if (k == Keys.Enter) { 
-                        if (overlay.selected == OverlayOptions.Continue) {
-                            paused = false;
-                        } else if (overlay.selected == OverlayOptions.Quit) {
-                            resetGame();
-                            gameStateStack.Pop();
+                    if (game.gameOver)
+                    {
+                        processGameOverInput(unlockedKeys);
+                    } else
+                    {
+                        if (k == Keys.Down)
+                        {
+                            overlay.down();
+                            keyboard.lockKey(k);
                         }
-                        keyboard.lockKey(k);
+                        else if (k == Keys.Up)
+                        {
+                            overlay.up();
+                            keyboard.lockKey(k);
+                        }
+                        else if (k == Keys.Enter)
+                        {
+                            if (overlay.selected == OverlayOptions.Continue)
+                            {
+                                paused = false;
+                            }
+                            else if (overlay.selected == OverlayOptions.Quit)
+                            {
+                                resetGame();
+                                gameStateStack.Pop();
+                            }
+                            keyboard.lockKey(k);
+                        }
                     }
-
                 }
                 else
                 {
@@ -149,6 +166,37 @@ namespace Centipede
             }
         }
 
+        private void processGameOverInput(List<Keys> keys)
+        {
+            foreach (Keys k in keys)
+            {
+                if (k == Keys.Down)
+                {
+                    gameOverOverlay.down();
+                    keyboard.lockKey(k);
+                }
+                else if (k == Keys.Up)
+                {
+                    gameOverOverlay.up();
+                    keyboard.lockKey(k);
+                }
+                else if (k == Keys.Enter)
+                {
+                    if (gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Restart)
+                    {
+                        resetGame();
+                        paused = false;
+                    }
+                    else if (gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Menu)
+                    {
+                        resetGame();
+                        gameStateStack.Pop();
+                    }
+                    keyboard.lockKey(k);
+                }
+            }
+        }
+
         public override void render(GameTime gameTime)
         {
             m_spriteBatch.Begin();
@@ -169,7 +217,13 @@ namespace Centipede
 
             // draw pause overlay
             if (paused) {
-                drawPauseOverlay();
+                if (game.gameOver)
+                {
+                    drawGameOverOverlay();
+                } else
+                {
+                    drawPauseOverlay();
+                }
             }
 
             m_spriteBatch.End();
@@ -199,16 +253,42 @@ namespace Centipede
 
             int continue_y = (bounds.Height * 3)/8;
             int quit_y = (bounds.Height * 4) / 8;
+
+            SpriteFont continueFont = overlay.selected == OverlayOptions.Continue ? m_fontMenuSelect : m_fontMenu;
+            SpriteFont quitFont = overlay.selected == OverlayOptions.Quit ? m_fontMenuSelect : m_fontMenu;
+
+            Color continueColor = overlay.selected == OverlayOptions.Continue ? Color.Yellow : Color.Orange;
+            Color quitColor = overlay.selected == OverlayOptions.Quit ? Color.Yellow : Color.Orange;
+
             // menu items
-            drawMenuItem(continue_y, OverlayOptions.Continue);
-            drawMenuItem(quit_y, OverlayOptions.Quit);
+            drawMenuItem(continueFont, continue_y, OverlayOptions.Continue.ToString(), continueColor);
+            drawMenuItem(quitFont, quit_y, OverlayOptions.Quit.ToString(), quitColor);
         }
 
-        private float drawMenuItem(float y, OverlayOptions selected)
+        private void drawGameOverOverlay()
         {
-            String text = selected.ToString();
-            Color color = overlay.selected == selected ? Color.Yellow : Color.Orange;
-            SpriteFont font = overlay.selected == selected ? m_fontMenuSelect : m_fontMenu;
+            // I want this to be half the width and half the height of the screen in the center
+            Rectangle bounds = m_graphics.GraphicsDevice.Viewport.Bounds;
+            // Vector2 position = new Vector2(bounds.Width / 4, bounds.Height / 4);
+            Rectangle rec = new Rectangle(bounds.Width / 4, bounds.Height / 4, bounds.Width / 2, bounds.Height / 2);
+            m_spriteBatch.Draw(overlayTexture, rec, Color.Aqua);
+
+            int restart_y = (bounds.Height * 3) / 8;
+            int menu_y = (bounds.Height * 4) / 8;
+
+            SpriteFont restartFont = gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Restart ? m_fontMenuSelect : m_fontMenu;
+            SpriteFont menuFont = gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Menu ? m_fontMenuSelect : m_fontMenu;
+
+            Color restartColor = gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Restart ? Color.Yellow : Color.Orange;
+            Color menuColor = gameOverOverlay.selected == GameOverOverlay.OverlayOptions.Menu ? Color.Yellow : Color.Orange;
+
+            // menu items
+            drawMenuItem(restartFont, restart_y, GameOverOverlay.OverlayOptions.Restart.ToString(), restartColor);
+            drawMenuItem(menuFont, menu_y, GameOverOverlay.OverlayOptions.Menu.ToString(), menuColor);
+        }
+
+        private float drawMenuItem(SpriteFont font, float y, string text, Color color)
+        {
             Vector2 stringSize = font.MeasureString(text);
             m_spriteBatch.DrawString(
                 font,

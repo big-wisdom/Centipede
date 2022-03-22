@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
 namespace Centipede
 {
-    public class Overlay : IOverlay
+    class GameOverOverlay: IOverlay
     {
-        public enum OverlayOptions { 
-            Continue,
-            Quit
+        public enum OverlayOptions
+        {
+            Restart,
+            Menu,
         }
 
         int options = Enum.GetNames(typeof(OverlayOptions)).Length;
+        int index = 0;
 
-        public OverlayOptions selected = OverlayOptions.Continue;
+        public OverlayOptions selected = OverlayOptions.Restart;
 
-        private int index = 0;
         protected override void constrainIndex()
         {
             if (index >= options) index = 0;
@@ -28,7 +32,7 @@ namespace Centipede
 
         public override void down()
         {
-            index -= 1;
+            index += 1;
             constrainIndex();
         }
     }

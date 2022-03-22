@@ -9,6 +9,7 @@ namespace Centipede
     public class Centipede
     {
         int numberOfMushrooms = 20;
+        public bool gameOver = false;
         // set a standard screen size and in rendering I will account for bigger or smaller screens
         private Rectangle bounds = new Rectangle(0, 0, 1280, 800);
 
@@ -82,19 +83,34 @@ namespace Centipede
 
         public void update(GameTime gameTime)
         {
-            Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
-
-            if (!ship.dead)
+            // if ship is dead, game over
+            if (ship.dead)
             {
+                gameOver = true;
+            }
+
+            if (!gameOver)
+            {
+                Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
+
                 // And in the section, while updating each object, notify it of it's collisions
                 // and allow it to react properly
-                ship.update(gameTime, collisions[ship]);
+                if (collisions.ContainsKey(ship))
+                {
+                    ship.update(gameTime, collisions[ship]);
+                }
+                else
+                {
+                    ship.update(gameTime, new List<Collision>());
+                }
+
 
                 foreach (CentipedeSegment s in centipede.centipede)
                 {
                     s.update(gameTime, collisions[s]);
                 }
             }
+
         }
 
         // I should have this return a dictionary whose key is the object and whose
@@ -102,49 +118,50 @@ namespace Centipede
         private Dictionary<Entity, List<Collision>> collisionDetection(GameTime time) {
             Dictionary<Entity, List<Collision>> result = new Dictionary<Entity, List<Collision>>();
 
-            // check ship against centipede
-            foreach (CentipedeSegment c in centipede.centipede)
-            {
-                Collision collision = ship.checkForCollision(c, time.ElapsedGameTime);
-                if (collision != null)
+            if (!ship.hit) {             // check ship against centipede
+                foreach (CentipedeSegment c in centipede.centipede)
                 {
-                    if (result.ContainsKey(ship))
+                    Collision collision = ship.checkForCollision(c, time.ElapsedGameTime);
+                    if (collision != null)
                     {
-                        result[ship].Add(collision);
-                    } else
-                    {
-                        result.Add(ship, new List<Collision> { collision });
-                    }
-                }
-            }
-
-            // check ship against all mushrooms
-            foreach (Mushroom m in mushrooms)
-            {
-                Collision c = ship.checkForCollision(m, time.ElapsedGameTime);
-                if (c != null)
-                {
-                    if (result.ContainsKey(ship))
-                    {
-                        result[ship].Add(c);
-                    }
-                    else
-                    {
-                        result.Add(ship, new List<Collision> { c });
+                        if (result.ContainsKey(ship))
+                        {
+                            result[ship].Add(collision);
+                        } else
+                        {
+                            result.Add(ship, new List<Collision> { collision });
+                        }
                     }
                 }
 
-            }
-            // check ship against walls
-            Rectangle walls = bounds;
-            Rectangle shipBoundary = new Rectangle(0, (walls.Height*3)/4, walls.Width, walls.Height/4);
-            List<Collision> wallCollisions = ship.checkBoundaryCollision(shipBoundary, time);
-            if (result.ContainsKey(ship))
-            {
-                result[ship].AddRange(wallCollisions);
-            } else
-            {
-                result.Add(ship, wallCollisions);
+                // check ship against all mushrooms
+                foreach (Mushroom m in mushrooms)
+                {
+                    Collision c = ship.checkForCollision(m, time.ElapsedGameTime);
+                    if (c != null)
+                    {
+                        if (result.ContainsKey(ship))
+                        {
+                            result[ship].Add(c);
+                        }
+                        else
+                        {
+                            result.Add(ship, new List<Collision> { c });
+                        }
+                    }
+
+                }
+                // check ship against walls
+                Rectangle walls = bounds;
+                Rectangle shipBoundary = new Rectangle(0, (walls.Height * 3) / 4, walls.Width, walls.Height / 4);
+                List<Collision> wallCollisions = ship.checkBoundaryCollision(shipBoundary, time);
+                if (result.ContainsKey(ship))
+                {
+                    result[ship].AddRange(wallCollisions);
+                } else
+                {
+                    result.Add(ship, wallCollisions);
+                }
             }
 
 

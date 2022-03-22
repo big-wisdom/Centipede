@@ -9,25 +9,48 @@ namespace Centipede
 {
     public class Ship : Entity
     {
-        bool hit = false;
+        int lives = 3;
+        public bool hit = false;
+        bool waiting = false;
         public bool dead = false;
         int frame = 0;
 
         TimeSpan animationMilliseconds = TimeSpan.FromMilliseconds(25);
         TimeSpan timeTillAnimate = TimeSpan.FromMilliseconds(25);
+        TimeSpan hitWaitTime = TimeSpan.FromSeconds(3);
+        TimeSpan hitWaitTimeLeft = TimeSpan.FromSeconds(3);
+
+        Vector2 startingPosition;
 
         public Ship(Vector2 position) : base(position, new Vector2(-14, -16), 20, 300, CharachterEnum.Ship)
         {
+            startingPosition = position;
         }
 
         private void updateFrame(GameTime gameTime)
         {
-            timeTillAnimate -= gameTime.ElapsedGameTime;
-            if (timeTillAnimate.TotalMilliseconds < 0)
+            if (!waiting)
             {
-                timeTillAnimate = animationMilliseconds + timeTillAnimate;
-                frame++;
-                if (frame > 6) dead = true;
+                timeTillAnimate -= gameTime.ElapsedGameTime;
+                if (timeTillAnimate.TotalMilliseconds < 0)
+                {
+                    timeTillAnimate = animationMilliseconds + timeTillAnimate;
+                    frame++;
+                    if (frame > 6) dead = true;
+                }
+            }
+            else
+            {
+                // wait waiting period after death
+                hitWaitTimeLeft -= gameTime.ElapsedGameTime;
+                if (hitWaitTimeLeft < TimeSpan.Zero)
+                {
+                    hitWaitTimeLeft = hitWaitTime;
+                    hit = false; // not hit
+                    waiting = false; // not waiting anymore
+                    position = startingPosition; // reset position
+                    frame = 0;
+                }
             }
         }
 
@@ -61,7 +84,14 @@ namespace Centipede
             {
                 if (hit)
                 {
-                    updateFrame(gametime);
+                    if (lives == 0)
+                    {
+                        dead = true;
+                    } else
+                    {
+                        updateFrame(gametime);
+                    }
+
                 }
                 else
                 {
@@ -93,13 +123,22 @@ namespace Centipede
 
                                 case CharachterEnum.Centipede:
                                     hit = true;
+                                    lives -= 1;
                                     break;
                             }
                         }
                     }
                     position = getNextPosition(gametime.ElapsedGameTime);
                 }
+            } else
+            {
+                resetShip();
             }
+        }
+
+        private void resetShip()
+        {
+
         }
 
         // this funtion projects the velocity along the tangent to the circle being impacted
