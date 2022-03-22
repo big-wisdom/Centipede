@@ -84,12 +84,16 @@ namespace Centipede
         {
             Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
 
-            // And in the section, while updating each object, notify it of it's collisions
-            // and allow it to react properly
-            ship.update(gameTime, collisions[ship]);
+            if (!ship.dead)
+            {
+                // And in the section, while updating each object, notify it of it's collisions
+                // and allow it to react properly
+                ship.update(gameTime, collisions[ship]);
 
-            foreach (CentipedeSegment s in centipede.centipede) {
-                s.update(gameTime, collisions[s]);
+                foreach (CentipedeSegment s in centipede.centipede)
+                {
+                    s.update(gameTime, collisions[s]);
+                }
             }
         }
 
@@ -97,6 +101,23 @@ namespace Centipede
         // value is a list of collision objects
         private Dictionary<Entity, List<Collision>> collisionDetection(GameTime time) {
             Dictionary<Entity, List<Collision>> result = new Dictionary<Entity, List<Collision>>();
+
+            // check ship against centipede
+            foreach (CentipedeSegment c in centipede.centipede)
+            {
+                Collision collision = ship.checkForCollision(c, time.ElapsedGameTime);
+                if (collision != null)
+                {
+                    if (result.ContainsKey(ship))
+                    {
+                        result[ship].Add(collision);
+                    } else
+                    {
+                        result.Add(ship, new List<Collision> { collision });
+                    }
+                }
+            }
+
             // check ship against all mushrooms
             foreach (Mushroom m in mushrooms)
             {

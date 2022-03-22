@@ -143,7 +143,10 @@ namespace Centipede
                 game.stopShip();
             }
 
-            game.update(gameTime);
+            if (!paused)
+            {
+                game.update(gameTime);
+            }
         }
 
         public override void render(GameTime gameTime)
