@@ -8,6 +8,8 @@ namespace Centipede
     public class Mushroom : Entity
     {
         int frame = 0;
+        public bool alive = true;
+
         public Mushroom(int x, int y): base(new Vector2((x * 32) + 16, (y * 32) + 16), new Vector2(-16, -16), 16, 0, GameView.CharachterEnum.Mushroom)
         {
         }
@@ -23,6 +25,19 @@ namespace Centipede
 
         public override void update(GameTime gameTime, List<Collision> collisions)
         {
+            foreach (Collision c in collisions)
+            {
+                if (c.entityType == GameView.CharachterEnum.laser)
+                {
+                    updateFrame();
+                }
+            }
+        }
+
+        private void updateFrame()
+        {
+            frame++;
+            if (frame > 3) alive = false;
         }
     }
 }

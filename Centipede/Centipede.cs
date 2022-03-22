@@ -122,10 +122,26 @@ namespace Centipede
                     ship.update(gameTime, new List<Collision>());
                 }
 
+                List<Laser> removeLasers = new List<Laser>();
                 foreach (Laser l in lasers)
                 {
-                    l.update(gameTime, new List<Collision>());
+                    if (l.exists)
+                    {
+                        l.update(gameTime, new List<Collision>());
+                    } else
+                    {
+                        removeLasers.Add(l);
+                    }
                 }
+                foreach (Laser l in removeLasers) lasers.Remove(l);
+
+                List<Mushroom> remove = new List<Mushroom>();
+                foreach(Mushroom m in mushrooms)
+                {
+                    if (collisions.ContainsKey(m)) m.update(gameTime, collisions[m]);
+                    if (!m.alive) remove.Add(m);
+                }
+                foreach (Mushroom m in remove) mushrooms.Remove(m);
 
                 List<CentipedeSegment> deadSegments = centipede.removeDeadSegments();
                 turnDeadSegmentsIntoMushrooms(deadSegments);
@@ -201,7 +217,7 @@ namespace Centipede
                 }
             }
 
-            // check lasers against centipede
+            // check lasers against centipede and mushrooms
             foreach (Laser l in lasers)
             {
                 foreach (CentipedeSegment s in centipede.centipede)
@@ -214,6 +230,17 @@ namespace Centipede
                         l.exists = false;
                         if (result.ContainsKey(s)) result[s].Add(collision);
                         else result.Add(s, new List<Collision> { collision });
+                    }
+                }
+
+                foreach (Mushroom m in mushrooms)
+                {
+                    Collision collision = m.checkForCollision(l, time.ElapsedGameTime);
+                    if (collision != null)
+                    {
+                        l.exists = false;
+                        if (result.ContainsKey(m)) result[m].Add(collision);
+                        else result.Add(m, new List<Collision> { collision });
                     }
                 }
             }
