@@ -14,6 +14,9 @@ namespace Centipede
         private TimeSpan animationMilliseconds = TimeSpan.FromMilliseconds(25);
         private TimeSpan timeTillAnimate = TimeSpan.FromMilliseconds(25);
 
+        bool hit = false;
+        public bool alive = true;
+
         int row = 1;
         public Rectangle walls {
             get {
@@ -31,7 +34,7 @@ namespace Centipede
             return false;
         }
 
-        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 300, CharachterEnum.Centipede)
+        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 500, CharachterEnum.Centipede)
         {
             previousAngle = angle;
             move(angle);
@@ -41,19 +44,38 @@ namespace Centipede
 
         public override Rectangle computeSourceRectangle()
         {
-            int x = 0;
-            int y = 64;
-            int cell = 32;
-            if (frame % 2 == 0)
+            if (hit)
             {
-                x += (frame / 2) * cell;
+                int x = 256;
+                int y = 256;
+                if (frame % 2 == 0)
+                {
+                    x += 32 * (frame / 2);
+                }
+                else
+                {
+                    y += 32;
+                    x += ((frame - 1) / 2) * 32;
+                }
+                return new Rectangle(x, y, 32, 32);
             } else
             {
-                y += cell;
-                x += ((frame - 1) / 2) * cell;
+                int x = 0;
+                int y = 64;
+                int cell = 32;
+                if (frame % 2 == 0)
+                {
+                    x += (frame / 2) * cell;
+                }
+                else
+                {
+                    y += cell;
+                    x += ((frame - 1) / 2) * cell;
+                }
+
+                return new Rectangle(x, y, 32, 32);
             }
 
-            return new Rectangle(x, y, 32, 32);
         }
 
         public override void update(GameTime gameTime, List<Collision> collisions)
@@ -106,6 +128,10 @@ namespace Centipede
                         position += c.toImpact;
                         holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.Y / (float)maxSpeed));
                         break;
+
+                    case CharachterEnum.laser:
+                        hit = true;
+                        break;
                 }
             }
 
@@ -128,6 +154,7 @@ namespace Centipede
             {
                 timeTillAnimate = animationMilliseconds + timeTillAnimate;
                 frame = (frame + 1) % 8;
+                if (hit && frame == 6) alive = false;
             }
         }
     }

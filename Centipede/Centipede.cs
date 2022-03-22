@@ -8,7 +8,7 @@ namespace Centipede
 {
     public class Centipede
     {
-        int numberOfMushrooms = 20;
+        int numberOfMushrooms = 30;
         public bool gameOver = false;
         // set a standard screen size and in rendering I will account for bigger or smaller screens
         private Rectangle bounds = new Rectangle(0, 0, 1280, 800);
@@ -127,7 +127,7 @@ namespace Centipede
                     l.update(gameTime, new List<Collision>());
                 }
 
-
+                centipede.removeDeadSegments();
                 foreach (CentipedeSegment s in centipede.centipede)
                 {
                     s.update(gameTime, collisions[s]);
@@ -141,7 +141,8 @@ namespace Centipede
         private Dictionary<Entity, List<Collision>> collisionDetection(GameTime time) {
             Dictionary<Entity, List<Collision>> result = new Dictionary<Entity, List<Collision>>();
 
-            if (!ship.hit) {             // check ship against centipede
+            if (!ship.hit) {             
+                // check ship against centipede
                 foreach (CentipedeSegment c in centipede.centipede)
                 {
                     Collision collision = ship.checkForCollision(c, time.ElapsedGameTime);
@@ -184,6 +185,23 @@ namespace Centipede
                 } else
                 {
                     result.Add(ship, wallCollisions);
+                }
+            }
+
+            // check lasers against centipede
+            foreach (Laser l in lasers)
+            {
+                foreach (CentipedeSegment s in centipede.centipede)
+                {
+                    // create the collision from the point of view of the centipede segment so it reacts to it easier
+                    // and set exists to false on the laser so that it can be cleaned up in update
+                    Collision collision = s.checkForCollision(l, time.ElapsedGameTime);
+                    if (collision != null)
+                    {
+                        l.exists = false;
+                        if (result.ContainsKey(s)) result[s].Add(collision);
+                        else result.Add(s, new List<Collision> { collision });
+                    }
                 }
             }
 

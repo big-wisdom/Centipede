@@ -8,7 +8,8 @@ namespace Centipede
 {
     public class Laser : Entity
     {
-        public Laser(Vector2 position): base(position, new Vector2(-2, -12), 12, 600, CharachterEnum.laser)
+        public bool exists = true;
+        public Laser(Vector2 position): base(position, new Vector2(-2, -12), 6, 1000, CharachterEnum.laser)
         {
             move(3* Math.PI / 2);
         }

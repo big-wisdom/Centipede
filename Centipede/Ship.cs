@@ -73,7 +73,6 @@ namespace Centipede
                 }
                 return new Rectangle(x, y, 32, 32);
             }
-
         }
 
         public override void update(GameTime gametime, List<Collision> collisions)

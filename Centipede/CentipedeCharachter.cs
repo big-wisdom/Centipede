@@ -26,5 +26,20 @@ namespace Centipede
                 centipede.Add(new CentipedeSegment(position+interval, offset, angle, i%8, walls));
             }
         }
+
+        public void removeDeadSegments()
+        {
+            List<CentipedeSegment> removeList = new List<CentipedeSegment>();
+            foreach (CentipedeSegment s in centipede)
+            {
+                if (!s.alive)
+                    removeList.Add(s);
+            }
+            
+            foreach (CentipedeSegment s in removeList)
+            {
+                centipede.Remove(s);
+            }
+        }
     }
 }
