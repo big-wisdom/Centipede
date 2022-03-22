@@ -16,6 +16,7 @@ namespace Centipede
         public Ship ship { get; set; }
         public CentipedeCharachter centipede { get; set; }
         public List<Mushroom> mushrooms = new List<Mushroom>();
+        public List<Laser> lasers = new List<Laser>();
 
         public Centipede()
         {
@@ -71,6 +72,21 @@ namespace Centipede
             }
         }
 
+        TimeSpan coolDownTime = TimeSpan.FromMilliseconds(200);
+        TimeSpan coolDown = TimeSpan.FromMilliseconds(200);
+        public void shoot()
+        {
+            if (coolDown <= TimeSpan.Zero)
+            {
+                // if shoot timer allows it
+                // calculate position
+                Vector2 laserPosition = ship.position + new Vector2(0, -28);
+                // create laser and add it to list
+                lasers.Add(new Laser(laserPosition));
+                coolDown = coolDownTime;
+            }
+        }
+
         public void moveShip(double angle)
         {
             ship.move(angle);
@@ -91,6 +107,8 @@ namespace Centipede
 
             if (!gameOver)
             {
+                coolDown -= gameTime.ElapsedGameTime;
+
                 Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
 
                 // And in the section, while updating each object, notify it of it's collisions
@@ -102,6 +120,11 @@ namespace Centipede
                 else
                 {
                     ship.update(gameTime, new List<Collision>());
+                }
+
+                foreach (Laser l in lasers)
+                {
+                    l.update(gameTime, new List<Collision>());
                 }
 
 

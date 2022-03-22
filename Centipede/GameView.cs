@@ -32,7 +32,8 @@ namespace Centipede
             up,
             right,
             down,
-            left
+            left,
+            shoot
         }
 
         public Dictionary<Keys, ControlsEnum> controls { get; set; }
@@ -54,7 +55,8 @@ namespace Centipede
                 {Keys.Up, ControlsEnum.up},
                 {Keys.Right, ControlsEnum.right},
                 {Keys.Down, ControlsEnum.down},
-                {Keys.Left, ControlsEnum.left}
+                {Keys.Left, ControlsEnum.left},
+                {Keys.Space, ControlsEnum.shoot},
             };
         }
 
@@ -143,6 +145,10 @@ namespace Centipede
                             y += 1;
                             move = true;
                         }
+                        if (control == ControlsEnum.shoot)
+                        {
+                            game.shoot();
+                        }
                     }
                     if (k == Keys.Escape)
                     {
@@ -213,6 +219,12 @@ namespace Centipede
             foreach(Mushroom m in game.mushrooms)
             {
                 drawEntity(m);
+            }
+
+            // render lasers
+            foreach(Laser l in game.lasers)
+            {
+                drawEntity(l);
             }
 
             // draw pause overlay
