@@ -61,10 +61,10 @@ namespace Centipede
             List<Collision> collisions = new List<Collision>();
 
             if ((hypotheticalPosition.X - rec.X) < radius) {  // left wall
-                collisions.Add(new Collision(CharachterEnum.leftWall, new Vector2(rec.X - (position.X - radius))));
+                collisions.Add(new Collision(CharachterEnum.leftWall, new Vector2(rec.X - (position.X - radius), 0)));
             }
             if (((rec.X+rec.Width) - hypotheticalPosition.X) < radius) {  // right wall
-                collisions.Add(new Collision(CharachterEnum.rightWall, new Vector2((rec.X+rec.Width)-(position.X+radius))));
+                collisions.Add(new Collision(CharachterEnum.rightWall, new Vector2((rec.X+rec.Width)-(position.X+radius), 0)));
             }
             if ((hypotheticalPosition.Y - rec.Y) < radius) {  // top wall
                 collisions.Add(new Collision(CharachterEnum.topWall, new Vector2(0, rec.Y - (position.Y-radius))));

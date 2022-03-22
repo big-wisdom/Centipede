@@ -77,7 +77,7 @@ namespace Centipede
                         previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
                         move(previousAngle);
                         position += c.displacement;
-                        holdTime = TimeSpan.FromSeconds(c.displacement.Y / (float)maxSpeed);
+                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.displacement.Y / (float)maxSpeed));
                         break;
                 }
             }
