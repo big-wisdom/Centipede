@@ -31,7 +31,7 @@ namespace Centipede
             return false;
         }
 
-        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 500, CharachterEnum.Centipede)
+        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 300, CharachterEnum.Centipede)
         {
             previousAngle = angle;
             move(angle);

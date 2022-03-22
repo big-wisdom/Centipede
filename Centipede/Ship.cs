@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using static Centipede.GameView;
 
 namespace Centipede
@@ -36,7 +34,7 @@ namespace Centipede
                 {
                     timeTillAnimate = animationMilliseconds + timeTillAnimate;
                     frame++;
-                    if (frame > 6) dead = true;
+                    if (frame > 6) waiting = true;
                 }
             }
             else
