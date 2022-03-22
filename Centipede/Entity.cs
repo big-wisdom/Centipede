@@ -88,5 +88,48 @@ namespace Centipede
                 
             return null;
         }
+
+        public enum Direction
+        {
+            Up,
+            UpRight,
+            Right,
+            DownRight,
+            Down,
+            DownLeft,
+            Left,
+            UpLeft,
+        }
+
+        public Direction direction
+        {
+            get
+            {
+                if (3 * Math.PI / 8 < angle && angle < 5 * Math.PI / 8) return Direction.Down;
+                if (13 * Math.PI / 8 < angle && angle < 15 * Math.PI / 8) return Direction.Up;
+                if (14 * Math.PI / 8 < angle && angle < Math.PI / 8) return Direction.Right;
+                //if (7 * Math.PI / 8 < angle && angle < 9 * Math.PI / 8) return Direction.Left;
+                return Direction.Left;
+            }
+
+            set
+            {
+                switch (value)
+                {
+                    case Direction.Up:
+                        move(3 * Math.PI / 2);
+                        break;
+                    case Direction.Right:
+                        move(0);
+                        break;
+                    case Direction.Down:
+                        move(Math.PI / 2);
+                        break;
+                    case Direction.Left:
+                        move(Math.PI);
+                        break;
+                }
+            }
+        }
     }
 }

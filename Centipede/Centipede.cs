@@ -31,6 +31,12 @@ namespace Centipede
             Vector2 offSet = new Vector2(-cellSize/2, -cellSize/2);
             centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, bounds);
 
+            // some test shrooms
+            //Mushroom m = new Mushroom(1, 1);
+            //mushrooms.Add(m);
+            //Mushroom mu = new Mushroom(38, 1);
+            //mushrooms.Add(mu);
+
             for (int i = 0; i < numberOfMushrooms; i++)
             {
                 bool added = false;
@@ -47,7 +53,7 @@ namespace Centipede
                     {
                         if (m.checkForCollision(c, TimeSpan.Zero) != null)
                         {
-                            spotTaken = true;
+                           spotTaken = true;
                         }
                     }
                     if (m.checkForCollision(ship, TimeSpan.Zero) != null)
@@ -125,17 +131,19 @@ namespace Centipede
             // check centipede against walls
             foreach (CentipedeSegment s in centipede.centipede) {
                 List<Collision> collisions = s.checkBoundaryCollision(s.walls, time);
-                foreach (Mushroom m in mushrooms)
-                {
-                    Collision c = s.checkForCollision(m, time.ElapsedGameTime);
-                    if (c != null) collisions.Add(c);
-                }
+
                 if (result.ContainsKey(s))
                 {
                     result[s].AddRange(collisions);
                 } else
                 {
                     result.Add(s, collisions);
+                }
+
+                foreach (Mushroom m in mushrooms)
+                {
+                    Collision c = s.checkForCollision(m, time.ElapsedGameTime);
+                    if (c != null) collisions.Add(c);
                 }
 
                 // check against all mushrooms

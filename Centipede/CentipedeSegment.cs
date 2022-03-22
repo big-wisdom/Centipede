@@ -31,7 +31,7 @@ namespace Centipede
             return false;
         }
 
-        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 300, CharachterEnum.Centipede)
+        public CentipedeSegment(Vector2 position, Vector2 offset, double angle, int startingFrame, Rectangle walls): base(position, offset, 16, 500, CharachterEnum.Centipede)
         {
             previousAngle = angle;
             move(angle);
@@ -60,10 +60,35 @@ namespace Centipede
         {
             updateFrame(gameTime);
 
+            // if moving down
+                // if you hit a mushroom or a wall
+                    // if you can go the opposite direction
+                        // go opposite direction
+                    // else
+                        // go the same direction
+            // if moving to the side
+                // if you hit a mushroom or a wall
+                    // if you can go down
+                        // go down
+                    // else
+                        // turn around
+
+            // if moving down
+                // if you hit a mushroom or a wall
+                    // collide with it
+                    // try going left
+
+
             foreach (Collision c in collisions) {
                 switch (c.entityType) {
                     case CharachterEnum.Mushroom:
-                        goto case CharachterEnum.leftWall;
+                        if (3*Math.PI/8 < angle&&angle < 5*Math.PI/8)
+                        {
+                            goto case CharachterEnum.bottomWall;
+                        } else
+                        {
+                            goto case CharachterEnum.leftWall;
+                        }
                     case CharachterEnum.rightWall:
                         goto case CharachterEnum.leftWall;
                     case CharachterEnum.leftWall:
