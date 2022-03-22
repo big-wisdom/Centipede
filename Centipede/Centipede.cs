@@ -127,13 +127,26 @@ namespace Centipede
                     l.update(gameTime, new List<Collision>());
                 }
 
-                centipede.removeDeadSegments();
+                List<CentipedeSegment> deadSegments = centipede.removeDeadSegments();
+                turnDeadSegmentsIntoMushrooms(deadSegments);
                 foreach (CentipedeSegment s in centipede.centipede)
                 {
                     s.update(gameTime, collisions[s]);
                 }
             }
 
+        }
+
+        private void turnDeadSegmentsIntoMushrooms(List<CentipedeSegment> dead)
+        {
+            foreach (CentipedeSegment s in dead)
+            {
+                // calculate which box they were in
+                int x = (int)Math.Floor(s.position.X / 32);
+                int y = (int)Math.Floor(s.position.Y / 32);
+                // create a mushroom there
+                mushrooms.Add(new Mushroom(x, y));
+            }
         }
 
         // I should have this return a dictionary whose key is the object and whose

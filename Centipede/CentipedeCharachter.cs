@@ -27,7 +27,7 @@ namespace Centipede
             }
         }
 
-        public void removeDeadSegments()
+        public List<CentipedeSegment> removeDeadSegments()
         {
             List<CentipedeSegment> removeList = new List<CentipedeSegment>();
             foreach (CentipedeSegment s in centipede)
@@ -40,6 +40,8 @@ namespace Centipede
             {
                 centipede.Remove(s);
             }
+
+            return removeList;
         }
     }
 }
