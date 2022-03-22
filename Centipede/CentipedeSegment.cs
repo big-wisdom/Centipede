@@ -62,22 +62,24 @@ namespace Centipede
 
             foreach (Collision c in collisions) {
                 switch (c.entityType) {
+                    case CharachterEnum.Mushroom:
+                        goto case CharachterEnum.leftWall;
                     case CharachterEnum.rightWall:
                         goto case CharachterEnum.leftWall;
                     case CharachterEnum.leftWall:
                         row++;
                         move(Math.PI / 2);
                         // snap into grid
-                        position += c.displacement;
+                        position += c.toImpact;
                         // set hold time
-                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.displacement.X / (float)maxSpeed));
+                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.X / (float)maxSpeed));
                         break;
 
                     case CharachterEnum.bottomWall:
                         previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
                         move(previousAngle);
-                        position += c.displacement;
-                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.displacement.Y / (float)maxSpeed));
+                        position += c.toImpact;
+                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.Y / (float)maxSpeed));
                         break;
                 }
             }

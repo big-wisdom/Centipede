@@ -82,7 +82,8 @@ namespace Centipede
             if (futureToCenter.Length() < (radius + e.radius))
             {
                 Vector2 toCenter = e.position - position;
-                return new Collision(e.type, toCenter);
+                Vector2 toImpact = Vector2.Multiply(Vector2.Normalize(toCenter), toCenter.Length() - (radius + e.radius));
+                return new Collision(e.type, toImpact);
             }
                 
             return null;

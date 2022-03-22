@@ -125,6 +125,11 @@ namespace Centipede
             // check centipede against walls
             foreach (CentipedeSegment s in centipede.centipede) {
                 List<Collision> collisions = s.checkBoundaryCollision(s.walls, time);
+                foreach (Mushroom m in mushrooms)
+                {
+                    Collision c = s.checkForCollision(m, time.ElapsedGameTime);
+                    if (c != null) collisions.Add(c);
+                }
                 if (result.ContainsKey(s))
                 {
                     result[s].AddRange(collisions);

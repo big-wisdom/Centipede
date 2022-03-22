@@ -7,11 +7,11 @@ namespace Centipede
     public class Collision
     {
         public CharachterEnum entityType;
-        public Vector2 displacement;
+        public Vector2 toImpact;
 
         public Collision(CharachterEnum entityType, Vector2 displacement)
         {
-            this.displacement = displacement;
+            this.toImpact = displacement;
             this.entityType = entityType;
         }
     }
