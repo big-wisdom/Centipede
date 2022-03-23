@@ -10,12 +10,16 @@ namespace Centipede
     {
         int numberOfMushrooms = 30;
         public bool gameOver = false;
+        int points = 0;
         // set a standard screen size and in rendering I will account for bigger or smaller screens
         private Rectangle bounds = new Rectangle(0, 0, 1280, 800);
 
         public Ship ship { get; set; }
         public CentipedeCharachter centipede { get; set; }
+
         public Scorpion scorpion { get; set; }
+        private TimeSpan timeTillScorpion;
+
         public List<Mushroom> mushrooms = new List<Mushroom>();
         public List<Laser> lasers = new List<Laser>();
 
@@ -34,7 +38,9 @@ namespace Centipede
             Vector2 offSet = new Vector2(-cellSize/2, -cellSize/2);
             centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, bounds);
 
-            Vector2 scorpionPosition = new Vector2(0, 10 * cellSize);
+            // Initiallize scorpion to a random time
+            timeTillScorpion = TimeSpan.FromSeconds(rnd.Next(5, 10));
+            Vector2 scorpionPosition = new Vector2(-70, 10 * cellSize);
             scorpion = new Scorpion(scorpionPosition);
 
             // some test shrooms
@@ -112,6 +118,8 @@ namespace Centipede
             if (!gameOver)
             {
                 coolDown -= gameTime.ElapsedGameTime;
+                timeTillScorpion -= gameTime.ElapsedGameTime;
+                if (timeTillScorpion < TimeSpan.Zero) scorpion.move(0);
 
                 Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
 

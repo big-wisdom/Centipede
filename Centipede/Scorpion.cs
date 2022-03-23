@@ -13,7 +13,6 @@ namespace Centipede
 
         public Scorpion(Vector2 position): base(position, new Vector2(-32, -32), 64, 300, GameView.CharachterEnum.Scorpion)
         {
-            move(0);
         }
         public override bool flip => false;
 
