@@ -216,20 +216,37 @@ namespace Centipede
                 drawEntity(e);
             }
 
-            // redner scorpion
-            drawEntity(game.scorpion);
-
             // render mushrooms
             foreach(Mushroom m in game.mushrooms)
             {
                 drawEntity(m);
             }
 
+            // redner scorpion
+            foreach (Scorpion s in game.scorpions)
+            {
+                drawEntity(s);
+            }
+
             // render lasers
-            foreach(Laser l in game.lasers)
+            foreach (Laser l in game.lasers)
             {
                 drawEntity(l);
             }
+
+            // render points and lives
+            Vector2 pointPosition = new Vector2(m_graphics.GraphicsDevice.Viewport.Bounds.Width / 2, 0);
+            m_spriteBatch.DrawString(m_fontMenu, game.points.ToString(), pointPosition, Color.White);
+
+            Vector2 livesPosition = new Vector2(m_graphics.GraphicsDevice.Viewport.Bounds.Width / 4, 0);
+            Rectangle sourceRectangle = new Rectangle(0, 320, 32, 32);
+            int lifeWidth = 20;
+            for (int i=0; i<game.ship.lives; i++)
+            {
+                Rectangle destinationRectangle = new Rectangle((int)livesPosition.X + (i*lifeWidth), (int)livesPosition.Y, 20, 20);
+                m_spriteBatch.Draw(spriteSheet, destinationRectangle, sourceRectangle, Color.White);
+            }
+
 
             // draw pause overlay
             if (paused) {

@@ -7,7 +7,7 @@ namespace Centipede
 {
     public class Ship : Entity
     {
-        int lives = 3;
+        public int lives = 3;
         public bool hit = false;
         bool waiting = false;
         public bool dead = false;

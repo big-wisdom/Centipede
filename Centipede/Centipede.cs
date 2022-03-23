@@ -10,18 +10,26 @@ namespace Centipede
     {
         int numberOfMushrooms = 30;
         public bool gameOver = false;
-        int points = 0;
+        public int points = 0;
         // set a standard screen size and in rendering I will account for bigger or smaller screens
         private Rectangle bounds = new Rectangle(0, 0, 1280, 800);
 
         public Ship ship { get; set; }
         public CentipedeCharachter centipede { get; set; }
 
-        public Scorpion scorpion { get; set; }
+        public List<Scorpion> scorpions { get; set; }
         private TimeSpan timeTillScorpion;
 
         public List<Mushroom> mushrooms = new List<Mushroom>();
         public List<Laser> lasers = new List<Laser>();
+
+        private Dictionary<CharachterEnum, int> pointValues = new Dictionary<CharachterEnum, int> 
+        { 
+            { CharachterEnum.Centipede, 10 },
+            { CharachterEnum.Scorpion, 900 },
+            { CharachterEnum.Mushroom, 1 },
+            { CharachterEnum.Spider, 300 },
+        };
 
         public Centipede()
         {
@@ -41,7 +49,7 @@ namespace Centipede
             // Initiallize scorpion to a random time
             timeTillScorpion = TimeSpan.FromSeconds(rnd.Next(5, 10));
             Vector2 scorpionPosition = new Vector2(-70, 10 * cellSize);
-            scorpion = new Scorpion(scorpionPosition);
+            scorpions = new List<Scorpion> { new Scorpion(scorpionPosition) };
 
             // some test shrooms
             //Mushroom m = new Mushroom(1, 1);
@@ -119,7 +127,11 @@ namespace Centipede
             {
                 coolDown -= gameTime.ElapsedGameTime;
                 timeTillScorpion -= gameTime.ElapsedGameTime;
-                if (timeTillScorpion < TimeSpan.Zero) scorpion.move(0);
+
+                foreach( Scorpion s in scorpions)
+                {
+                    if (timeTillScorpion < TimeSpan.Zero) s.move(0);
+                }
 
                 Dictionary<Entity, List<Collision>> collisions = collisionDetection(gameTime); // I'll get the dictionary here
 
@@ -147,13 +159,21 @@ namespace Centipede
                 }
                 foreach (Laser l in removeLasers) lasers.Remove(l);
 
+                List<Scorpion> removeScorpions = new List<Scorpion>();
+                foreach (Scorpion s in scorpions) if (s.dead) removeScorpions.Add(s);
+                foreach (Scorpion s in removeScorpions) scorpions.Remove(s);
+
                 List<Mushroom> remove = new List<Mushroom>();
                 foreach(Mushroom m in mushrooms)
                 {
                     if (collisions.ContainsKey(m)) m.update(gameTime, collisions[m]);
                     if (!m.alive) remove.Add(m);
                 }
-                foreach (Mushroom m in remove) mushrooms.Remove(m);
+                foreach (Mushroom m in remove)
+                {
+                    mushrooms.Remove(m);
+                    points += pointValues[CharachterEnum.Mushroom];
+                }
 
                 List<CentipedeSegment> deadSegments = centipede.removeDeadSegments();
                 turnDeadSegmentsIntoMushrooms(deadSegments);
@@ -162,8 +182,11 @@ namespace Centipede
                     s.update(gameTime, collisions[s]);
                 }
 
-                if (collisions.ContainsKey(scorpion)) scorpion.update(gameTime, collisions[scorpion]);
-                else scorpion.update(gameTime, new List<Collision>());
+                foreach (Scorpion scorpion in scorpions)
+                {
+                    if (collisions.ContainsKey(scorpion)) scorpion.update(gameTime, collisions[scorpion]);
+                    else scorpion.update(gameTime, new List<Collision>());
+                }
             }
 
         }
@@ -235,11 +258,14 @@ namespace Centipede
             // check scorpion against all mushrooms
             foreach (Mushroom m in mushrooms)
             {
-                Collision collision = m.checkForCollision(scorpion, time.ElapsedGameTime);
-                if (collision != null)
+                foreach (Scorpion scorpion in scorpions)
                 {
-                    if (result.ContainsKey(m)) result[m].Add(collision);
-                    else result.Add(m, new List<Collision> { collision });
+                    Collision collision = m.checkForCollision(scorpion, time.ElapsedGameTime);
+                    if (collision != null)
+                    {
+                        if (result.ContainsKey(m)) result[m].Add(collision);
+                        else result.Add(m, new List<Collision> { collision });
+                    }
                 }
             }
 
@@ -253,6 +279,7 @@ namespace Centipede
                     Collision collision = s.checkForCollision(l, time.ElapsedGameTime);
                     if (collision != null)
                     {
+                        points += pointValues[CharachterEnum.Centipede];
                         l.exists = false;
                         if (result.ContainsKey(s)) result[s].Add(collision);
                         else result.Add(s, new List<Collision> { collision });
@@ -267,6 +294,20 @@ namespace Centipede
                         l.exists = false;
                         if (result.ContainsKey(m)) result[m].Add(collision);
                         else result.Add(m, new List<Collision> { collision });
+                    }
+                }
+
+                foreach (Scorpion scorpion in scorpions)
+                {
+                    if (!scorpion.hit)
+                    {
+                        Collision scorpionCollision = scorpion.checkForCollision(l, time.ElapsedGameTime);
+                        if (scorpionCollision != null)
+                        {
+                            points += pointValues[CharachterEnum.Scorpion];
+                            if (result.ContainsKey(scorpion)) result[scorpion].Add(scorpionCollision);
+                            else result.Add(scorpion, new List<Collision> { scorpionCollision });
+                        }
                     }
                 }
             }
