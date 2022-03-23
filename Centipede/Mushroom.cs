@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Centipede.GameView;
 
 namespace Centipede
 {
     public class Mushroom : Entity
     {
         int frame = 0;
+        bool poison = false;
         public bool alive = true;
 
         public Mushroom(int x, int y): base(new Vector2((x * 32) + 16, (y * 32) + 16), new Vector2(-16, -16), 16, 0, GameView.CharachterEnum.Mushroom)
@@ -19,7 +21,7 @@ namespace Centipede
         public override Rectangle computeSourceRectangle()
         {
             int x = 256 + (32 * frame);
-            int y = 0;
+            int y = poison ? 32 : 0;
             return new Rectangle(x, y, 32, 32);
         }
 
@@ -27,9 +29,14 @@ namespace Centipede
         {
             foreach (Collision c in collisions)
             {
-                if (c.entityType == GameView.CharachterEnum.laser)
+                switch (c.entityType)
                 {
-                    updateFrame();
+                    case CharachterEnum.laser:
+                        updateFrame();
+                        break;
+                    case CharachterEnum.Scorpion:
+                        poison = true;
+                        break;
                 }
             }
         }

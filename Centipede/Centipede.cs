@@ -224,6 +224,17 @@ namespace Centipede
                 }
             }
 
+            // check scorpion against all mushrooms
+            foreach (Mushroom m in mushrooms)
+            {
+                Collision collision = m.checkForCollision(scorpion, time.ElapsedGameTime);
+                if (collision != null)
+                {
+                    if (result.ContainsKey(m)) result[m].Add(collision);
+                    else result.Add(m, new List<Collision> { collision });
+                }
+            }
+
             // check lasers against centipede and mushrooms
             foreach (Laser l in lasers)
             {
