@@ -47,7 +47,8 @@ namespace Centipede
             centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, bounds);
 
             // Initiallize scorpion to a random time
-            timeTillScorpion = TimeSpan.FromSeconds(rnd.Next(5, 10));
+            //timeTillScorpion = TimeSpan.FromSeconds(rnd.Next(5, 10));
+            timeTillScorpion = TimeSpan.FromSeconds(rnd.Next(2));
             Vector2 scorpionPosition = new Vector2(-70, 10 * cellSize);
             scorpions = new List<Scorpion> { new Scorpion(scorpionPosition) };
 

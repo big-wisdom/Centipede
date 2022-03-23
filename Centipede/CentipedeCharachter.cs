@@ -20,7 +20,7 @@ namespace Centipede
                 angle = 0;
             }
 
-            for (int i=0; i<12; i++) {
+            for (int i=0; i<1; i++) {
                 // calculate position of each
                 Vector2 interval = Vector2.Multiply(new Vector2((int)(Math.Cos(angle) * cellSize), 0), i);
                 centipede.Add(new CentipedeSegment(position+interval, offset, angle, i%8, walls));

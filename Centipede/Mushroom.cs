@@ -36,6 +36,7 @@ namespace Centipede
                         break;
                     case CharachterEnum.Scorpion:
                         poison = true;
+                        type = CharachterEnum.poisonMushroom;
                         break;
                 }
             }

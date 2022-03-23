@@ -18,6 +18,7 @@ namespace Centipede
             Ship,
             Centipede,
             Mushroom,
+            poisonMushroom,
             Spider,
             laser,
             Scorpion,

@@ -16,11 +16,39 @@ namespace Centipede
 
         bool hit = false;
         public bool alive = true;
+        bool poisoned;
+
+        // generally up or generally down
+        bool down = true;
+
+        // poisoned data
+        private TimeSpan poisonedTimeTillSwitch = TimeSpan.FromMilliseconds(200);
+        private TimeSpan poisonedSwitchTime = TimeSpan.FromMilliseconds(200);
+        bool downRight = true;
+
+        bool confined = false;
 
         int row = 1;
         public Rectangle walls {
             get {
-                return new Rectangle(0, 0, bigWalls.Width, row * 32);
+                if (poisoned)
+                {
+                    return bigWalls;
+                } else
+                {
+                    if (down && !confined)
+                    {
+                        if (confined)
+                        {
+                            return new Rectangle(0, 3 * bigWalls.Height / 5, bigWalls.Width, row * 32);
+                        }
+                        return new Rectangle(0, 0, bigWalls.Width, row * 32);
+                    } else
+                    {
+                        return new Rectangle(0, (3*bigWalls.Height/5) + ((10-row)*32),  bigWalls.Width, row*32);
+                    }
+
+                }
             }
         }
 
@@ -82,56 +110,103 @@ namespace Centipede
         {
             updateFrame(gameTime);
 
-            // if moving down
-                // if you hit a mushroom or a wall
-                    // if you can go the opposite direction
-                        // go opposite direction
-                    // else
-                        // go the same direction
-            // if moving to the side
-                // if you hit a mushroom or a wall
-                    // if you can go down
-                        // go down
-                    // else
-                        // turn around
+            if (poisoned)
+            {
+                poisonedTimeTillSwitch -= gameTime.ElapsedGameTime;
+                if (poisonedTimeTillSwitch < TimeSpan.Zero)
+                {
+                    downRight = !downRight; // switch direction
+                    poisonedTimeTillSwitch = poisonedSwitchTime + poisonedTimeTillSwitch;
+                }
 
-            // if moving down
-                // if you hit a mushroom or a wall
-                    // collide with it
-                    // try going left
-
-
-            foreach (Collision c in collisions) {
-                switch (c.entityType) {
-                    case CharachterEnum.Mushroom:
-                        if (3*Math.PI/8 < angle&&angle < 5*Math.PI/8)
-                        {
-                            goto case CharachterEnum.bottomWall;
-                        } else
-                        {
-                            goto case CharachterEnum.leftWall;
-                        }
-                    case CharachterEnum.rightWall:
-                        goto case CharachterEnum.leftWall;
-                    case CharachterEnum.leftWall:
-                        row++;
-                        move(Math.PI / 2);
-                        // snap into grid
-                        position += c.toImpact;
-                        // set hold time
-                        holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.X / (float)maxSpeed));
-                        break;
-
-                    case CharachterEnum.bottomWall:
-                        previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
-                        move(previousAngle);
+                foreach(Collision c in collisions)
+                {
+                    if (c.entityType == CharachterEnum.laser)
+                    {
+                        hit = true;
+                    } else if(c.entityType == CharachterEnum.bottomWall)
+                    {
+                        poisoned = false;
                         position += c.toImpact;
                         holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.Y / (float)maxSpeed));
-                        break;
+                        down = false;
+                        confined = true;
+                        row = 1;
+                        move(0);
+                    }
+                }
 
-                    case CharachterEnum.laser:
-                        hit = true;
-                        break;
+                if (poisoned)
+                {
+                    if (downRight)
+                    {
+                        // move down right
+                        move(Math.PI / 4);
+                    }
+                    else
+                    {
+                        // move down left
+                        move(3 * Math.PI / 4);
+                    }
+                }
+            } else
+            {
+                foreach (Collision c in collisions)
+                {
+                    switch (c.entityType)
+                    {
+                        case CharachterEnum.Mushroom:
+                            if (3 * Math.PI / 8 < angle && angle < 5 * Math.PI / 8)
+                            {
+                                goto case CharachterEnum.bottomWall;
+                            }
+                            else
+                            {
+                                goto case CharachterEnum.leftWall;
+                            }
+                        case CharachterEnum.rightWall:
+                            goto case CharachterEnum.leftWall;
+                        case CharachterEnum.leftWall:
+                            if (down)
+                            {
+                                move(Math.PI / 2);
+                                row++;
+                            } else
+                            {
+                                move(3 * Math.PI / 2);
+                                if (row < 10)
+                                {
+                                    row++;
+                                } else
+                                {
+                                    down = true;
+                                    confined = true;
+                                    row = 1;
+                                }
+                            }
+                            // snap into grid
+                            position += c.toImpact;
+                            // set hold time
+                            holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.X / (float)maxSpeed));
+                            break;
+
+                        case CharachterEnum.topWall:
+                            goto case CharachterEnum.bottomWall;
+                        case CharachterEnum.bottomWall:
+                            previousAngle = (previousAngle + Math.PI) % (2 * Math.PI);
+                            move(previousAngle);
+                            position += c.toImpact;
+                            holdTime = TimeSpan.FromSeconds(Math.Abs(c.toImpact.Y / (float)maxSpeed));
+                            break;
+
+                        case CharachterEnum.laser:
+                            hit = true;
+                            break;
+
+                        case CharachterEnum.poisonMushroom:
+                            poisoned = true;
+                            break;
+                    }
                 }
             }
 
