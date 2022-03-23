@@ -15,6 +15,7 @@ namespace Centipede
 
         public Ship ship { get; set; }
         public CentipedeCharachter centipede { get; set; }
+        public Scorpion scorpion { get; set; }
         public List<Mushroom> mushrooms = new List<Mushroom>();
         public List<Laser> lasers = new List<Laser>();
 
@@ -32,6 +33,9 @@ namespace Centipede
             Vector2 centipedePosition = new Vector2(index*cellSize, 0);
             Vector2 offSet = new Vector2(-cellSize/2, -cellSize/2);
             centipede = new CentipedeCharachter(centipedePosition-offSet, offSet, cellSize, bounds);
+
+            Vector2 scorpionPosition = new Vector2(0, 10 * cellSize);
+            scorpion = new Scorpion(scorpionPosition);
 
             // some test shrooms
             //Mushroom m = new Mushroom(1, 1);
@@ -149,6 +153,9 @@ namespace Centipede
                 {
                     s.update(gameTime, collisions[s]);
                 }
+
+                if (collisions.ContainsKey(scorpion)) scorpion.update(gameTime, collisions[scorpion]);
+                else scorpion.update(gameTime, new List<Collision>());
             }
 
         }

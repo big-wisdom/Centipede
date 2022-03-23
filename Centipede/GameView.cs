@@ -20,6 +20,7 @@ namespace Centipede
             Mushroom,
             Spider,
             laser,
+            Scorpion,
             topWall,
             rightWall,
             bottomWall,
@@ -214,6 +215,9 @@ namespace Centipede
             foreach (Entity e in game.centipede.centipede) {
                 drawEntity(e);
             }
+
+            // redner scorpion
+            drawEntity(game.scorpion);
 
             // render mushrooms
             foreach(Mushroom m in game.mushrooms)
