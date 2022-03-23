@@ -5,7 +5,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 using static Centipede.GameView;
 
 namespace Centipede
@@ -28,6 +32,7 @@ namespace Centipede
         {
             this.gameView = gameView;
             this.controls = gameView.controls;
+            // loadSomething();
             bindings = swapDictionary<Keys, ControlsEnum>(controls);
 
             foreach (ControlsEnum k in bindings.Keys) // for each control
@@ -62,6 +67,7 @@ namespace Centipede
                             setLock = false;
                             error = false;
                             controls = potential;
+                            // saveSomething();
                             gameView.controls = potential;
                             break;
                         } else
@@ -107,6 +113,7 @@ namespace Centipede
             bottom = drawControlItem(bottom, ControlsEnum.right);
             bottom = drawControlItem(bottom, ControlsEnum.down);
             bottom = drawControlItem(bottom, ControlsEnum.left);
+            bottom = drawControlItem(bottom, ControlsEnum.shoot);
             drawBackButton(bottom);
             buttonsAdded = true;
 
@@ -120,8 +127,7 @@ namespace Centipede
             Color color;
             if (set[control])
             {
-
-                text = "Move " + control.ToString() + ": " + (error ? "Press a key that isn't used" : "Press key to bind");
+                text = (control != ControlsEnum.shoot?"Move ":"") + control.ToString() + ": " + (error ? "Press a key that isn't used" : "Press key to bind");
                 font = m_fontMenuSelect;
                 color = Color.Yellow;
                 
@@ -181,8 +187,97 @@ namespace Centipede
             return result;
         }
 
+        private void saveSomething()
+        {
+            lock (this)
+            {
+                if (!this.saving)
+                {
+                    this.saving = true;
+                    //
+
+                    persistControls();
+                }
+            }
+        }
+
         public override void update(GameTime gameTime)
         {
+        }
+
+        bool saving = false;
+        bool loading = false;
+
+        private async void persistControls()
+        {
+            await Task.Run(() =>
+            {
+                using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+                {
+                    try
+                    {
+                        using (IsolatedStorageFileStream fs = storage.OpenFile("controls.xml", FileMode.OpenOrCreate))
+                        {
+                            if (fs != null)
+                            {
+                                XmlSerializer mySerializer = new XmlSerializer(typeof(Dictionary<Keys, ControlsEnum>));
+                                mySerializer.Serialize(fs, controls);
+                            }
+                        }
+                    }
+                    catch (IsolatedStorageException)
+                    {
+                        // Ideally show something to the user, but this is demo code :)
+                    }
+                }
+
+                this.saving = false;
+            });
+        }
+
+        private void loadSomething()
+        {
+            lock (this)
+            {
+                if (!this.loading)
+                {
+                    this.loading = true;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    loadControls();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+            }
+        }
+
+        private async Task loadControls()
+        {
+            await Task.Run(() =>
+            {
+                using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+                {
+                    try
+                    {
+                        if (storage.FileExists("controls.xml"))
+                        {
+                            using (IsolatedStorageFileStream fs = storage.OpenFile("controls.xml", FileMode.Open))
+                            {
+                                if (fs != null)
+                                {
+                                    XmlSerializer mySerializer = new XmlSerializer(typeof(Dictionary<Keys,ControlsEnum>));
+                                    controls = (Dictionary<Keys, ControlsEnum>)mySerializer.Deserialize(fs);
+                                    gameView.controls = controls;
+                                }
+                            }
+                        }
+                    }
+                    catch (IsolatedStorageException)
+                    {
+                        // Ideally show something to the user, but this is demo code :)
+                    }
+                }
+
+                this.loading = false;
+            });
         }
     }
 }
